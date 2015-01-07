@@ -2,12 +2,12 @@ noflo = require 'noflo'
 
 unless noflo.isBrowser()
   chai = require 'chai' unless chai
-  Runtime = require '../src/microflo'
+  Runtime = require('../index').getTransport 'microflo'
   Base = require '../src/base'
   utils = require './utils'
   connection = require '../helpers/connection'
 else
-  Runtime = require 'fbp-protocol-client/src/microflo'
+  Runtime = require('fbp-protocol-client').getTransport 'microflo'
   Base = require 'fbp-protocol-client/src/base'
   connection = require 'fbp-protocol-client/helpers/connection'
   
