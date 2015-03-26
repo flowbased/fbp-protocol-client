@@ -72,8 +72,7 @@ class IframeRuntime extends Base
     @connected = true
 
     # Perform capability discovery
-    @send 'runtime', 'getruntime',
-      secret: @definition.secret
+    @send 'runtime', 'getruntime', {}
 
     @emit 'status',
       online: true

@@ -2,7 +2,7 @@ platform = require '../helpers/platform'
 
 class BaseRuntime extends platform.EventEmitter
   constructor: (@definition) ->
-    @definition.capabilities = [] unless definition.capabilities
+    @definition.capabilities = [] unless @definition.capabilities
     @graph = null
 
   setMain: (@graph) ->
@@ -90,13 +90,17 @@ class BaseRuntime extends platform.EventEmitter
           command: command
           payload: payload
 
-  sendRuntime: (command, payload) ->
+  sendRuntime: (command, payload = {}) ->
+    payload.secret = @definition.secret
     @send 'runtime', command, payload
-  sendGraph: (command, payload) ->
+  sendGraph: (command, payload = {}) ->
+    payload.secret = @definition.secret
     @send 'graph', command, payload
-  sendNetwork: (command, payload) ->
+  sendNetwork: (command, payload = {}) ->
+    payload.secret = @definition.secret
     @send 'network', command, payload
-  sendComponent: (command, payload) ->
+  sendComponent: (command, payload = {}) ->
+    payload.secret = @definition.secret
     @send 'component', command, payload
 
   send: (protocol, command, payload) ->

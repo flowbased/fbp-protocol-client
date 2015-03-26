@@ -51,8 +51,7 @@ class WebSocketRuntime extends Base
       @connecting = false
 
       # Perform capability discovery
-      @send 'runtime', 'getruntime',
-        secret: @definition.secret
+      @send 'runtime', 'getruntime', {}
 
       @emit 'status',
         online: true
