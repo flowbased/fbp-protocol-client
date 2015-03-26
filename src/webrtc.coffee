@@ -57,7 +57,7 @@ class WebRTCRuntime extends Base
         console.log 'message', data.data if @debug
         @handleMessage data.data
       @connecting = false
-      @send 'runtime', 'getruntime', {}
+      @sendRuntime 'getruntime', {}
       @emit 'status',
         online: true
         label: 'connected'
