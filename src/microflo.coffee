@@ -102,7 +102,7 @@ class MicroFloRuntime extends Base
         @runtime = runtime
 
         # Perform capability discovery
-        @send 'runtime', 'getruntime', {}
+        @sendRuntime 'getruntime', {}
 
         @emit 'status',
           online: true
