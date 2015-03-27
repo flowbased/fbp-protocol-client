@@ -80,7 +80,9 @@ class MicroFloRuntime extends Base
           return callback null, dev
     else if info.type == 'simulator'
       getRuntime = (callback) =>
-        sim = new microflo.simulator.RuntimeSimulator
+        build = require 'microflo-emscripten'
+        sim = new microflo.simulator.RuntimeSimulator build.runtime
+        sim.library.definition = build.library # TODO: should be passed/looked up automatically
         sim.start()
         #sim.device.graph = sim.graph
         return callback null, sim
