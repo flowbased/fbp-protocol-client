@@ -17,7 +17,7 @@ timer(Timer) OUT -> IN toggle(ToggleBoolean) OUT -> IN write(DigitalWrite)
 '100' -> INTERVAL timer
 """
 
-describe.skip 'MicroFlo', ->
+describe 'MicroFlo', ->
 
   before (done) ->
     done()
