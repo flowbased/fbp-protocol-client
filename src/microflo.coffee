@@ -77,6 +77,10 @@ class MicroFloRuntime extends Base
         microflo.serial.openTransport info.device, parseInt(info.baudrate), (err, transport) ->
           return callback err if err
           dev = new microflo.runtime.Runtime transport
+          if process?.env? and process.env['MICROFLO_COMPONENT_MAP']
+            fs = require 'fs'
+            filename = process.env['MICROFLO_COMPONENT_MAP']
+            dev.library.definition = JSON.parse fs.readFileSync(filename)
           return callback null, dev
     else if info.type == 'simulator'
       getRuntime = (callback) =>
