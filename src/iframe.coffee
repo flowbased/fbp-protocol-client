@@ -99,24 +99,28 @@ class IframeRuntime extends Base
         throw new Error 'Use * for IFRAME communications in a Chrome app'
     catch e
       # Chrome Apps
-      w.postMessage
+      w.postMessage JSON.stringify
         protocol: protocol
         command: command
         payload: payload
       , '*'
       return
-    w.postMessage
+    w.postMessage JSON.stringify
       protocol: protocol
       command: command
       payload: payload
     , w.location.href
 
   onMessage: (message) =>
-    switch message.data.protocol
-      when 'runtime' then @recvRuntime message.data.command, message.data.payload
-      when 'graph' then @recvGraph message.data.command, message.data.payload
-      when 'network' then @recvNetwork message.data.command, message.data.payload
-      when 'component' then @recvComponent message.data.command, message.data.payload
+    if typeof message.data is 'string'
+      data = JSON.parse message.data
+    else
+      data = message.data
+    switch data.protocol
+      when 'runtime' then @recvRuntime data.command, data.payload
+      when 'graph' then @recvGraph data.command, data.payload
+      when 'network' then @recvNetwork data.command, data.payload
+      when 'component' then @recvComponent data.command, data.payload
 
   flush: ->
     for item in @buffer
