@@ -99,17 +99,17 @@ class IframeRuntime extends Base
         throw new Error 'Use * for IFRAME communications in a Chrome app'
     catch e
       # Chrome Apps
-      w.postMessage JSON.stringify
+      w.postMessage JSON.stringify(
         protocol: protocol
         command: command
         payload: payload
-      , '*'
+      ), '*'
       return
-    w.postMessage JSON.stringify
+    w.postMessage JSON.stringify(
       protocol: protocol
       command: command
       payload: payload
-    , w.location.href
+    ), w.location.href
 
   onMessage: (message) =>
     if typeof message.data is 'string'
