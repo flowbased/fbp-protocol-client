@@ -33,7 +33,7 @@
     "grunt-noflo-browser": "0.1.11",
     "grunt-noflo-manifest": "0.1.11",
     "microflo-emscripten": "0.3.28",
-    "mocha": "2.3.3",
+    "mocha": "2.4.2",
     "noflo": "0.5.14",
     "noflo-core": "0.1.14",
     "noflo-runtime-websocket": "0.2.5"
