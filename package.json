@@ -18,8 +18,10 @@
   ],
   "dependencies": {
     "coffee-script": "1.10.0",
-    "microflo": "0.3.29",
     "websocket": "1.0.22"
+  },
+  "optionalDependencies": {
+    "microflo": "0.3.29",
   },
   "devDependencies": {
     "chai": "3.3.0",
