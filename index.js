@@ -1,6 +1,5 @@
 exports.transports = {
   'websocket': require('./src/websocket'),
-  'microflo': require('./src/microflo'),
   'iframe': require('./src/iframe'),
   'webrtc': require('./src/webrtc')
 };
