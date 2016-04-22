@@ -51,7 +51,6 @@ class FakeRuntime extends EventEmitter
             capabilities: ["protocol:graph"]
 
   send: (protocol, topic, payload, context) ->
-    return if not context.channel
     msg =
       protocol: protocol
       command: topic
