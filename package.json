@@ -36,7 +36,7 @@
     "grunt-noflo-manifest": "0.1.11",
     "microflo-emscripten": "0.3.28",
     "mocha": "2.3.3",
-    "noflo": "0.5.14",
+    "noflo": "0.5.20",
     "noflo-core": "0.1.14",
     "noflo-runtime-websocket": "0.2.5"
   },
