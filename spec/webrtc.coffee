@@ -58,9 +58,9 @@ class FakeRuntime extends EventEmitter
     @channel.send m
 
 
-describeIfBrowser 'WebRTC', ->
+describe 'WebRTC', ->
 
-  describeIfBrowser 'transport', ->
+  describe 'transport', ->
     runtime = null
     id = "2ef763ff-1f28-49b8-b58f-5c9a5c23af2f"
     def =
