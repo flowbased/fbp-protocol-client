@@ -2,13 +2,13 @@ noflo = require 'noflo'
 
 unless noflo.isBrowser()
   chai = require 'chai' unless chai
-#  Runtime = require '../src/runtimes/webrtc'
+#  WebRtcRuntime = require '../src/runtimes/webrtc'
   Base = require '../src/base'
   utils = require './utils'
   connection = require '../helpers/connection'
   EventEmitter = require('events').EventEmitter
 else
-  Runtime = require 'fbp-protocol-client/src/webrtc'
+  WebRtcRuntime = require 'fbp-protocol-client/src/webrtc'
   Base = require 'fbp-protocol-client/src/base'
   connection = require 'fbp-protocol-client/helpers/connection'
   EventEmitter = require('emitter')
@@ -84,7 +84,7 @@ describeIfBrowser 'WebRTC', ->
       done()
 
     it 'should be instantiable', () ->
-      runtime = new Runtime def
+      runtime = new WebRtcRuntime def
       chai.expect(runtime).to.be.an.instanceof Base
     it 'should not be connected initially', () ->
       chai.expect(runtime.isConnected()).to.equal false
