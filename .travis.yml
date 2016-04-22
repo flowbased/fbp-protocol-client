@@ -1,6 +1,14 @@
 language: node_js
 node_js:
-  - 4.2
+- 4.2
 before_script:
-  - npm install -g grunt-cli
+- npm install -g grunt-cli
 sudo: false
+deploy:
+  provider: npm
+  email: jononor@gmail.com
+  api_key:
+    secure: RPqyzvW6F79hnwsnoxh4xKkWRC/w1qFVlRH6t2C0hNFJERzW0bsPHG3APnZcvxgZpHsE1TKPckY03+94qzZtF6/EJkL7ZHZuex16qPCR4ht/QlTBvWMIbrzTBVSvgcNe2J6NMeN+cTKVO1//810xVpZhZXm30eyyM9FfOJOrcRk=
+  on:
+    tags: true
+    repo: flowbased/fbp-protocol-client
