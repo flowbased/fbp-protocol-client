@@ -78,6 +78,8 @@ class WebRTCRuntime extends Base
     return unless @connection
     @connecting = false
     @connection.close()
+    @connection = null
+    @emit 'disconnected'
 
   send: (protocol, command, payload) ->
     m =
