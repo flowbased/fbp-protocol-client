@@ -7,7 +7,7 @@ exports.transports = {
 try {
   exports.transports.microflo = require('./src/microflo');
 } catch (e) {
-  console.log('fbp-protocol-client: microflo:// transport unavailable: ' + e.message);
+  console.log('fbp-protocol-client: MicroFlo transport unavailable: ' + e.message);
 }
 
 exports.getTransport = function (transport) {
