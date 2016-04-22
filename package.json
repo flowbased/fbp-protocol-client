@@ -10,12 +10,7 @@
     "type": "git",
     "url": "git://github.com/flowbased/fbp-protocol-client.git"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "undefined/blob/master/LICENSE-MIT"
-    }
-  ],
+  "license": "MIT",
   "dependencies": {
     "coffee-script": "1.10.0",
     "websocket": "1.0.22"
