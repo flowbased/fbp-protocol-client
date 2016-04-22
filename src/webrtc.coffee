@@ -1,4 +1,12 @@
 Base = require './base'
+platform = require '../helpers/platform'
+
+if platform.isBrowser()
+  RTC = window.RTC
+  rtcPlugins = []
+else
+  RTC = require 'rtc'
+  rtcPlugins = [ require('rtc-plugin-node') ]
 
 class WebRTCRuntime extends Base
   constructor: (definition) ->
@@ -49,6 +57,7 @@ class WebRTCRuntime extends Base
       capture: false
       constraints: false
       expectedLocalStreams: 0
+      plugins: rtcPlugins
 
     @peer = RTC options
     @peer.on 'channel:opened:chat', (id, dc) =>

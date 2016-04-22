@@ -13,6 +13,8 @@
   "license": "MIT",
   "dependencies": {
     "coffee-script": "~1.12.1",
+    "rtc": "^3.4.0",
+    "rtc-plugin-node": "^2.3.0",
     "websocket": "~1.0.22"
   },
   "optionalDependencies": {
