@@ -69,7 +69,7 @@ describeIfBrowser 'WebRTC', ->
       description: "Open any client-side NoFlo app in Flowhub"
       type: "noflo-browser"
       protocol: "webrtc"
-      address: "http://switchboard.rtc.io#"+id
+      address: id
       secret: "my-super-secret"
       id: id
       user: "3f3a8187-0931-4611-8963-239c0dff1931"
