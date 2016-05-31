@@ -20,20 +20,20 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "grunt": "^0.4.5",
+    "grunt": "^1.0.1",
     "grunt-coffeelint": "^0.0.15",
     "grunt-contrib-coffee": "^1.0.0",
-    "grunt-contrib-uglify": "^0.11.1",
-    "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
     "grunt-mocha-phantomjs": "^3.0.0",
     "grunt-mocha-test": "^0.12.7",
     "grunt-noflo-browser": "^0.1.11",
     "grunt-noflo-manifest": "^0.1.11",
     "microflo-emscripten": "^0.3.28",
     "mocha": "^2.4.5",
-    "noflo": "~0.5.22",
-    "noflo-core": "~0.1.14",
-    "noflo-runtime-websocket": "^0.2.5"
+    "noflo": "~0.7.5",
+    "noflo-core": "~0.2.0",
+    "noflo-runtime-websocket": "^0.6.2"
   },
   "keywords": [],
   "scripts": {
