@@ -1,11 +1,8 @@
 
 isBrowser = () ->
   return !(typeof(process) != 'undefined' && process.execPath && process.execPath.indexOf('node') != -1)
-try
-  EventEmitter = require 'emitter'
-catch e
-  EventEmitter = require('events').EventEmitter
 
+EventEmitter = require('events').EventEmitter
 
 if not isBrowser()
   # Simple compatibility layer between node.js WebSocket client and native browser APIs
