@@ -9,7 +9,7 @@
     "noflo/noflo": "*",
     "microflo/microflo": "*",
     "microflo/microflo-emscripten": "*",
-    "component/emitter": "*"
+    "bergie/emitter": "*"
   },
   "remotes": [
     "https://raw.githubusercontent.com"
