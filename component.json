@@ -3,7 +3,7 @@
   "description": "Client library for the FBP protocol",
   "author": "Henri Bergius <henri.bergius@iki.fi>",
   "repo": "flowbased/fbp-protocol-client",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "keywords": [],
   "dependencies": {
     "noflo/noflo": "*",
