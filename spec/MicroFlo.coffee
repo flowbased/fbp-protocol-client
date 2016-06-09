@@ -75,7 +75,8 @@ describe 'MicroFlo', ->
             return done()
         runtime.on 'execution', checkRunning
 
-        noflo.graph.loadFBP blinky, (g) ->
+        noflo.graph.loadFBP blinky, (err, g) ->
+          return done err if err
           graph = g
           runtime.setMain graph 
           runtime.connect()
