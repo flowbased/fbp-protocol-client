@@ -8,7 +8,7 @@
   "dependencies": {
     "noflo/noflo": "*",
     "microflo/microflo": "*",
-    "microflo/microflo-emscripten": "*",
+    "microflo/microflo-emscripten": "0.3.28",
     "bergie/emitter": "*"
   },
   "remotes": [
