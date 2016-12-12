@@ -23,6 +23,12 @@ module.exports = ->
 
     # Browser build of the client lib
     noflo_browser:
+      options:
+        baseDir: './'
+        ignores: [
+          /tv4/
+          /serialport/
+        ]
       build:
         files:
           'browser/fbp-protocol-client.js': ['entry.webpack.js']
