@@ -16,7 +16,7 @@
     "websocket": "~1.0.22"
   },
   "optionalDependencies": {
-    "microflo": "~0.3.36"
+    "microflo": "~0.3.38"
   },
   "devDependencies": {
     "chai": "^3.5.0",
