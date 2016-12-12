@@ -87,6 +87,7 @@ describeIfBrowser 'WebRTC', ->
     it 'should not be connected initially', () ->
       chai.expect(runtime.isConnected()).to.equal false
     it 'should emit "connected" on connect()', (done) ->
+      return @skip() if window._phantom
       @timeout 10000
       console.log 'running connect()'
       runtime.once 'connected', () ->
@@ -97,6 +98,7 @@ describeIfBrowser 'WebRTC', ->
       runtime.connect()
       console.log 'connect() done'
     it 'should emit "disconnected" on disconnect()', (done) ->
+      return @skip() if window._phantom
       @timeout 10000
       runtime.once 'disconnected', () ->
         chai.expect(runtime.isConnected()).to.equal false
