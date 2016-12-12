@@ -2,12 +2,14 @@ noflo = require 'noflo'
 
 unless noflo.isBrowser()
   chai = require 'chai' unless chai
-  Base = require '../src/base'
+  client = require '../index'
   utils = require './utils'
-  connection = require '../helpers/connection'
 else
-  Base = require 'fbp-protocol-client/src/base'
-  connection = require 'fbp-protocol-client/helpers/connection'
+  client = require 'fbp-protocol-client'
+
+Base = client.getTransport 'base'
+Runtime = client.getTransport 'microflo'
+connection = client.connection
   
 blinky = """
 timer(Timer) OUT -> IN toggle(ToggleBoolean) OUT -> IN write(DigitalWrite)
@@ -19,10 +21,6 @@ describe 'MicroFlo', ->
   Runtime = null
 
   before (done) ->
-    unless noflo.isBrowser()
-      Runtime = require('../index').getTransport 'microflo'
-    else
-      Runtime = require('fbp-protocol-client').getTransport 'microflo'
     done()
   after (done) ->
     done()

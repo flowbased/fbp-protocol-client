@@ -25,7 +25,7 @@ module.exports = ->
     noflo_browser:
       build:
         files:
-          'browser/fbp-protocol-client.js': ['component.json']
+          'browser/fbp-protocol-client.js': ['entry.webpack.js']
 
     # JavaScript minification for the browser
     uglify:
