@@ -1,8 +1,10 @@
 exports.transports = {
   'websocket': require('./src/websocket'),
   'iframe': require('./src/iframe'),
-  'webrtc': require('./src/webrtc')
+  'webrtc': require('./src/webrtc'),
+  'base': require('./src/base')
 };
+exports.connection = require('./helpers/connection');
 
 try {
   exports.transports.microflo = require('./src/microflo');

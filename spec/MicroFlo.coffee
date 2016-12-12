@@ -2,14 +2,14 @@ noflo = require 'noflo'
 
 unless noflo.isBrowser()
   chai = require 'chai' unless chai
-  Runtime = require('../index').getTransport 'microflo'
-  Base = require '../src/base'
+  client = require '../index'
   utils = require './utils'
-  connection = require '../helpers/connection'
 else
-  Runtime = require('fbp-protocol-client').getTransport 'microflo'
-  Base = require 'fbp-protocol-client/src/base'
-  connection = require 'fbp-protocol-client/helpers/connection'
+  client = require 'fbp-protocol-client'
+
+Base = client.getTransport 'base'
+Runtime = client.getTransport 'microflo'
+connection = client.connection
   
 blinky = """
 timer(Timer) OUT -> IN toggle(ToggleBoolean) OUT -> IN write(DigitalWrite)
@@ -18,7 +18,6 @@ timer(Timer) OUT -> IN toggle(ToggleBoolean) OUT -> IN write(DigitalWrite)
 """
 
 describe 'MicroFlo', ->
-
   before (done) ->
     done()
   after (done) ->
@@ -31,12 +30,15 @@ describe 'MicroFlo', ->
       'serial:///dev/foo?baudrate=115200': { type: 'serial', baudrate: '115200', device: '/dev/foo' },
     Object.keys(cases).forEach (name) ->
       expect = cases[name]
-      out = Runtime.parseAddress name
       describe name, ->
         it 'should equal expected', () ->
+          return @skip() unless Runtime
+          out = Runtime.parseAddress name
           chai.expect(out).to.eql expect
 
   describe 'Runtime', ->
+    before ->
+      @skip() unless Runtime
     runtime = null
     def =
       label: "MicroFlo Simulator"
@@ -66,6 +68,8 @@ describe 'MicroFlo', ->
       runtime.disconnect()
 
     describe 'Sending a Blink program', () ->
+      before ->
+        @skip() unless Runtime
       graph = null
       it 'should start executing', (done) ->
         runtime = new Runtime def

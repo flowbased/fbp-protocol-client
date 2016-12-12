@@ -23,9 +23,15 @@ module.exports = ->
 
     # Browser build of the client lib
     noflo_browser:
+      options:
+        baseDir: './'
+        ignores: [
+          /tv4/
+          /serialport/
+        ]
       build:
         files:
-          'browser/fbp-protocol-client.js': ['component.json']
+          'browser/fbp-protocol-client.js': ['entry.webpack.js']
 
     # JavaScript minification for the browser
     uglify:
@@ -52,6 +58,7 @@ module.exports = ->
       options:
         output: 'spec/result.xml'
         reporter: 'spec'
+        failWithOutput: true
       all: ['spec/runner.html']
 
     # Coding standards

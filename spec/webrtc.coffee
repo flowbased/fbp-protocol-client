@@ -3,14 +3,14 @@ noflo = require 'noflo'
 EventEmitter = require('events').EventEmitter
 unless noflo.isBrowser()
   chai = require 'chai' unless chai
-#  WebRtcRuntime = require '../src/runtimes/webrtc'
-  Base = require '../src/base'
+  client = require '../index'
   utils = require './utils'
-  connection = require '../helpers/connection'
 else
-  WebRtcRuntime = require 'fbp-protocol-client/src/webrtc'
-  Base = require 'fbp-protocol-client/src/base'
-  connection = require 'fbp-protocol-client/helpers/connection'
+  client = require 'fbp-protocol-client'
+
+Base = client.getTransport 'base'
+WebRtcRuntime = client.getTransport 'webrtc'
+connection = client.connection
 
 describeIfBrowser = if noflo.isBrowser() then describe else describe.skip
 
@@ -87,6 +87,7 @@ describeIfBrowser 'WebRTC', ->
     it 'should not be connected initially', () ->
       chai.expect(runtime.isConnected()).to.equal false
     it 'should emit "connected" on connect()', (done) ->
+      return @skip() if window._phantom
       @timeout 10000
       console.log 'running connect()'
       runtime.once 'connected', () ->
@@ -97,6 +98,7 @@ describeIfBrowser 'WebRTC', ->
       runtime.connect()
       console.log 'connect() done'
     it 'should emit "disconnected" on disconnect()', (done) ->
+      return @skip() if window._phantom
       @timeout 10000
       runtime.once 'disconnected', () ->
         chai.expect(runtime.isConnected()).to.equal false
