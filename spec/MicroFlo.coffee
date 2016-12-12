@@ -18,8 +18,6 @@ timer(Timer) OUT -> IN toggle(ToggleBoolean) OUT -> IN write(DigitalWrite)
 """
 
 describe 'MicroFlo', ->
-  Runtime = null
-
   before (done) ->
     done()
   after (done) ->
