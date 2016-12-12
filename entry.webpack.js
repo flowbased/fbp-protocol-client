@@ -1,6 +1,7 @@
 var exported = {
   'fbp-protocol-client': require('./index'),
-  'events': require('events')
+  'events': require('events'),
+  'noflo': require('noflo')
 };
 
 if (window) {
