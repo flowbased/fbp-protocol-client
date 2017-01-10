@@ -24,7 +24,7 @@ class IframeRuntime extends Base
 
   setParentElement: (parent) ->
     @iframe = document.createElement 'iframe'
-    @iframe.setAttribute 'sandbox', 'allow-scripts allow-same-origin'
+    @iframe.setAttribute 'sandbox', 'allow-scripts allow-same-origin allow-forms'
     parent.appendChild @iframe
 
   connect: ->
