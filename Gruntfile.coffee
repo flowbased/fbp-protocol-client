@@ -25,6 +25,9 @@ module.exports = ->
     noflo_browser:
       options:
         baseDir: './'
+        webpack:
+          externals:
+            'ws': 'commonjs ws' # microflo-emscripten build, not actually needed
         ignores: [
           /tv4/
           /serialport/
