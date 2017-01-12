@@ -32,7 +32,7 @@
     "grunt-noflo-browser": "^1.0.1",
     "grunt-noflo-manifest": "^0.1.11",
     "json-loader": "^0.5.4",
-    "microflo-emscripten": "^0.3.28",
+    "microflo-emscripten": "^0.3.42",
     "mocha": "^3.1.0",
     "noflo": "~0.7.7",
     "noflo-core": "~0.3.1",
