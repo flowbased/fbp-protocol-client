@@ -25,6 +25,20 @@ module.exports = ->
     noflo_browser:
       options:
         baseDir: './'
+        webpack:
+          externals:
+            'ws': 'commonjs ws' # microflo-emscripten build, not actually needed
+          module:
+            loaders: [
+              { test: /\.coffee$/, loader: "coffee-loader" }
+              { test: /\.json$/, loader: "json-loader" }
+              { test: /\.fbp$/, loader: "fbp-loader" }
+              { test: /\.yaml$/, loader: "json-loader!yaml-include-loader" }
+            ]
+          resolve:
+            extensions: ["", ".coffee", ".js"]
+          node:
+            fs: "empty"
         ignores: [
           /tv4/
           /serialport/
