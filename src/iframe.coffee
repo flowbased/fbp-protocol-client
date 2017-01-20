@@ -72,20 +72,31 @@ class IframeRuntime extends Base
 
   # Called every time the iframe has loaded successfully
   onLoaded: =>
-    @connecting = false
-    @connected = true
+    # Since the iframe runtime runs in user's browser, being loaded doesn't
+    # necessarily mean that the runtime has started. Especially on slower
+    # mobile devices the runtime initialization can still take a while.
+    # Because of this we loop requesting runtime info until runtime
+    # responds and only then consider ourselves connected.
+    @once 'capabilities', =>
+      # Runtime responded with a capabilities message. We're live!
+      clearTimeout timeout if timeout
+      @connecting = false
+      @connected = true
+      @emit 'status',
+        online: true
+        label: 'connected'
+      @emit 'connected'
 
-    # Perform capability discovery
-    @sendRuntime 'getruntime', {}
+      do @updateIframe
 
-    @emit 'status',
-      online: true
-      label: 'connected'
-    @emit 'connected'
+      @flush()
 
-    do @updateIframe
-
-    @flush()
+    # Start requesting capabilities
+    @postMessage 'runtime', 'getruntime', {}
+    timeout = setTimeout =>
+      # Keep trying until runtime responds
+      @postMessage 'runtime', 'getruntime', {}
+    , 500
 
   send: (protocol, command, payload) ->
     if @connecting
@@ -94,7 +105,9 @@ class IframeRuntime extends Base
         command: command
         payload: payload
       return
+    @postMessage protocol, command, payload
 
+  postMessage: (protocol, command, payload) ->
     w = @iframe.contentWindow
     return unless w
     try
@@ -128,7 +141,7 @@ class IframeRuntime extends Base
 
   flush: ->
     for item in @buffer
-      @send item.protocol, item.command, item.payload
+      @postMessage item.protocol, item.command, item.payload
     @buffer = []
 
 module.exports = IframeRuntime
