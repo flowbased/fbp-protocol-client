@@ -37,7 +37,7 @@ module.exports = ->
               use: ["fbp-loader"]
             ,
               test: /\.yaml$/
-              use: ["json-loader!yaml-include-loader"]
+              use: ["yaml-include-loader"]
             ]
           resolve:
             extensions: [".coffee", ".js"]
