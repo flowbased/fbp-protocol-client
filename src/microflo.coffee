@@ -65,7 +65,7 @@ class MicroFloRuntime extends Base
       @graph.removeListener 'changeProperties', @updatecontainer
 
     # Update contents on property changes
-    graph.on 'changeProperties', @updatecontainer
+    graph.on 'changeProperties', @updatecontainer if graph
     super graph
 
   openComm: () ->
