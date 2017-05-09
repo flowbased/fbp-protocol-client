@@ -90,6 +90,8 @@ class MicroFloRuntime extends Base
         sim.start()
         #sim.device.graph = sim.graph
         return callback null, sim
+    else
+      return @emit 'error', new Error "Unsupported type #{info.type}"
 
     getRuntime (err, runtime) =>
       return @emit 'error', err if err
