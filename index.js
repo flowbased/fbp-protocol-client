@@ -1,6 +1,7 @@
 exports.transports = {
   'websocket': require('./src/websocket'),
   'iframe': require('./src/iframe'),
+  'opener': require('./src/opener'),
   'webrtc': require('./src/webrtc'),
   'base': require('./src/base')
 };
