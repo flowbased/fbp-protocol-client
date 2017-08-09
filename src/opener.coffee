@@ -19,9 +19,6 @@ class OpenerRuntime extends Base
     # Update contents on property changes
     graph.on 'changeProperties', @updateIframe
 
-    # Ensure iframe gets updated
-    do @updateIframe
-
     super graph
 
   setParentElement: (parent) ->
@@ -50,11 +47,8 @@ class OpenerRuntime extends Base
     # Request capabilities from opener
     @postMessage 'runtime', 'getruntime', {}
 
-  updateIframe: =>
-    return unless @graph
-    env = @graph.properties.environment
-    return if !env or !env.content
-    @send 'iframe', 'setcontent', env.content
+  updateIframe: ->
+    return
 
   disconnect: ->
     @connected = false
