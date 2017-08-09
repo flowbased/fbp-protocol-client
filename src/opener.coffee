@@ -46,6 +46,10 @@ class OpenerRuntime extends Base
 
     # Request capabilities from opener
     @postMessage 'runtime', 'getruntime', {}
+    timeout = setTimeout =>
+      # Keep trying until runtime responds
+      @postMessage 'runtime', 'getruntime', {}
+    , 500
 
   updateIframe: ->
     return
