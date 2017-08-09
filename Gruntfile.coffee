@@ -27,7 +27,11 @@ module.exports = ->
         baseDir: './'
         webpack:
           externals:
+            'repl': 'commonjs repl' # somewhere inside coffee-script
+            'module': 'commonjs module' # somewhere inside coffee-script
+            'child_process': 'commonjs child_process' # somewhere inside coffee-script
             'ws': 'commonjs ws' # microflo-emscripten build, not actually needed
+            'jison': 'commonjs jison'
           module:
             rules: [
               test: /\.coffee$/
@@ -37,7 +41,10 @@ module.exports = ->
               use: ["fbp-loader"]
             ,
               test: /\.yaml$/
-              use: ["yaml-include-loader"]
+              use: [
+                "json-loader"
+                "yaml-include-loader"
+              ]
             ]
           resolve:
             extensions: [".coffee", ".js"]
@@ -46,6 +53,7 @@ module.exports = ->
         ignores: [
           /tv4/
           /serialport/
+          /bin\/coffee/
         ]
       build:
         files:
