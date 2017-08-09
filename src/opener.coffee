@@ -7,7 +7,7 @@ class OpenerRuntime extends Base
     @buffer = []
     super definition
 
-  getElement: -> @window.opener
+  getElement: -> null
 
   isConnected: -> @connected
 
