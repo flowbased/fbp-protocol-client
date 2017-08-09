@@ -39,7 +39,6 @@ class OpenerRuntime extends Base
 
     @once 'capabilities', =>
       # Runtime responded with a capabilities message. We're live!
-      clearTimeout timeout if timeout
       @connecting = false
       @connected = true
       @emit 'status',
