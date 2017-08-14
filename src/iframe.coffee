@@ -19,7 +19,7 @@ class IframeRuntime extends Base
       @graph.removeListener 'changeProperties', @updateIframe
 
     # Update contents on property changes
-    graph.on 'changeProperties', @updateIframe
+    graph.on 'changeProperties', @updateIframe if graph
 
     # Ensure iframe gets updated
     do @updateIframe
