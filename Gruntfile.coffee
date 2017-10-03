@@ -12,6 +12,18 @@ module.exports = ->
 
     # CoffeeScript compilation
     coffee:
+      lib:
+        expand: true
+        cwd: 'src/lib'
+        src: ['**.coffee']
+        dest: 'lib'
+        ext: '.js'
+      helpers:
+        expand: true
+        cwd: 'src/helpers'
+        src: ['**.coffee']
+        dest: 'helpers'
+        ext: '.js'
       spec:
         options:
           bare: true
@@ -89,9 +101,9 @@ module.exports = ->
 
     # Coding standards
     coffeelint:
-      components:
+      src:
         files:
-          src: ['components/*.coffee', 'src/*.coffee', 'src/runtimes/*.coffee']
+          src: ['src/lib/*.coffee', 'src/helpers/*.coffee']
         options:
           max_line_length:
             value: 80
@@ -118,11 +130,10 @@ module.exports = ->
 
   @registerTask 'test', 'Build and run automated tests', (target = 'all') =>
     @task.run 'coffeelint'
-    @task.run 'coffee'
+    @task.run 'build'
     if target is 'all' or target is 'nodejs'
       @task.run 'mochaTest'
     if target is 'all' or target is 'browser'
-      @task.run 'noflo_browser'
       @task.run 'mocha_phantomjs'
 
   @registerTask 'default', ['test']

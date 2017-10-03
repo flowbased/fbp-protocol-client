@@ -12,7 +12,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "coffee-script": "~1.12.1",
     "websocket": "~1.0.22"
   },
   "optionalDependencies": {
