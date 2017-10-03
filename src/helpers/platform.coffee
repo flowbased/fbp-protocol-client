@@ -14,7 +14,7 @@ if not isBrowser()
       @client = new WebSocketClient # the real client
       @connection = null
   
-      @client.on 'connectionFailed', (error) =>
+      @client.on 'connectFailed', (error) =>
         @emit 'error', error
       @client.on 'connect', (connection) =>
         console.log 'WARNING: multiple connections for one NodeWebSocketClient' if @connection
