@@ -1,14 +1,14 @@
 exports.transports = {
-  'websocket': require('./src/websocket'),
-  'iframe': require('./src/iframe'),
-  'opener': require('./src/opener'),
-  'webrtc': require('./src/webrtc'),
-  'base': require('./src/base')
+  'websocket': require('./lib/websocket'),
+  'iframe': require('./lib/iframe'),
+  'opener': require('./lib/opener'),
+  'webrtc': require('./lib/webrtc'),
+  'base': require('./lib/base')
 };
 exports.connection = require('./helpers/connection');
 
 try {
-  exports.transports.microflo = require('./src/microflo');
+  exports.transports.microflo = require('./lib/microflo');
 } catch (e) {
   console.log('fbp-protocol-client: MicroFlo transport unavailable: ' + e.message);
 }
