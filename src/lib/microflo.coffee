@@ -1,5 +1,6 @@
 Base = require './base'
 microflo = require 'microflo'
+debug = require('debug') 'fbp-protocol-client:microflo'
 
 parseQueryString = (queryString) ->
   queries = queryString.split "&"
@@ -102,7 +103,7 @@ class MicroFloRuntime extends Base
       runtime.device.open () =>
         @connecting = false
         if err
-          console.log 'MicroFlo error:', err
+          debug 'MicroFlo error:', err
           @emit 'error', err
           return
         @runtime = runtime
@@ -164,8 +165,8 @@ class MicroFloRuntime extends Base
     try
       @runtime.handleMessage msg
     catch e
-      console.log e.stack
-      console.log e
+      debug e.stack
+      debug e
 
   onMessage: (message) =>
     switch message.data.protocol

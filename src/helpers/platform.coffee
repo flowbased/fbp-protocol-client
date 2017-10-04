@@ -1,10 +1,10 @@
-
 isBrowser = () ->
   return !(typeof(process) != 'undefined' && process.execPath && process.execPath.indexOf('node') != -1)
 
 EventEmitter = require('events').EventEmitter
 
 if not isBrowser()
+  debug = require('debug') 'fbp-protocol-client:platform'
   # Simple compatibility layer between node.js WebSocket client and native browser APIs
   # Respects events: open, close, message, error
   # Note: no data is passed with open and close events
@@ -17,7 +17,7 @@ if not isBrowser()
       @client.on 'connectFailed', (error) =>
         @emit 'error', error
       @client.on 'connect', (connection) =>
-        console.log 'WARNING: multiple connections for one NodeWebSocketClient' if @connection
+        debug 'WARNING: multiple connections for one NodeWebSocketClient' if @connection
         @connection = connection
         connection.on 'error', (error) =>
           @connection = null
