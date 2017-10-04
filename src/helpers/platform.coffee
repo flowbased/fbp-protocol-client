@@ -36,7 +36,9 @@ if not isBrowser()
     addEventListener: (event, listener, capture, wantsUntrusted) ->
       @on event, listener
     close: () ->
+      return unless @connection
       @connection.close()
+      @connection = null
     send: (msg) ->
       @connection.sendUTF msg
     
