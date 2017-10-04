@@ -1,4 +1,5 @@
 Base = require './base'
+debug = require('debug') 'fbp-protocol-client:webrtc'
 
 class WebRTCRuntime extends Base
   constructor: (definition) ->
@@ -7,7 +8,6 @@ class WebRTCRuntime extends Base
     @connection = null
     @protocol = 'webrtc'
     @buffer = []
-    @debug = false
     super definition
 
   getElement: ->
@@ -54,7 +54,7 @@ class WebRTCRuntime extends Base
     @peer.on 'channel:opened:chat', (id, dc) =>
       @connection = dc
       @connection.onmessage = (data) =>
-        console.log 'message', data.data if @debug
+        debug 'message', data.data
         @handleMessage data.data
       @connecting = false
       @sendRuntime 'getruntime', {}
@@ -91,7 +91,7 @@ class WebRTCRuntime extends Base
       return
 
     return unless @connection
-    console.log 'send', m if @debug
+    debug 'send', m
     @connection.send JSON.stringify m
 
   handleError: (error) =>
