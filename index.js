@@ -1,3 +1,4 @@
+var debug = require('debug')('fbp-protocol-client');
 exports.transports = {
   'websocket': require('./lib/websocket'),
   'iframe': require('./lib/iframe'),
@@ -10,7 +11,7 @@ exports.connection = require('./helpers/connection');
 try {
   exports.transports.microflo = require('./lib/microflo');
 } catch (e) {
-  console.log('fbp-protocol-client: MicroFlo transport unavailable: ' + e.message);
+  debug('MicroFlo transport unavailable: ' + e.message);
 }
 
 exports.getTransport = function (transport) {
