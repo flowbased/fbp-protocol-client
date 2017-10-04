@@ -1,7 +1,7 @@
 {
   "name": "fbp-protocol-client",
   "description": "Client library for the FBP protocol",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "author": {
     "name": "Henri Bergius",
     "email": "henri.bergius@iki.fi"
