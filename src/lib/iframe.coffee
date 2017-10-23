@@ -59,7 +59,8 @@ class IframeRuntime extends Base
     @send 'iframe', 'setcontent', env.content
 
   disconnect: ->
-    @iframe.removeEventListener 'load', @onLoaded, false
+    if @iframe
+      @iframe.removeEventListener 'load', @onLoaded, false
     @connected = false
 
     # Stop listening to messages
