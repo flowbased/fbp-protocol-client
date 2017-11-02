@@ -2,12 +2,12 @@ Base = require './base'
 
 class IframeRuntime extends Base
   constructor: (definition) ->
+    super definition
     @origin = window.location.origin
     @connecting = false
     @connected = false
     @buffer = []
     @iframe = null
-    super definition
 
   getElement: -> @iframe
 

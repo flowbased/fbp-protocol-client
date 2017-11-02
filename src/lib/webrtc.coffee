@@ -3,12 +3,12 @@ debug = require('debug') 'fbp-protocol-client:webrtc'
 
 class WebRTCRuntime extends Base
   constructor: (definition) ->
+    super definition
     @peer = null
     @connecting = false
     @connection = null
     @protocol = 'webrtc'
     @buffer = []
-    super definition
 
   getElement: ->
     # FIXME: not implemented

@@ -41,6 +41,7 @@ parseAddress = (address) ->
 # TODO: make this runtime be for every device that supports the same FBCS protocol as MicroFlo
 class MicroFloRuntime extends Base
   constructor: (definition) ->
+    super definition
     @connecting = false
     @buffer = []
     @container = null
@@ -49,8 +50,6 @@ class MicroFloRuntime extends Base
     @runtime = null
 
     @on 'connected', @updatecontainer
-
-    super definition
 
   isConnected: -> @runtime isnt null
 

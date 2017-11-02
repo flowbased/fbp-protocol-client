@@ -16,6 +16,7 @@ describeIfBrowser = if noflo.isBrowser() then describe else describe.skip
 
 class FakeRuntime extends EventEmitter
   constructor: (address) ->
+    super()
     if (address.indexOf('#') != -1)
       @signaller = address.split('#')[0]
       @id = address.split('#')[1]
