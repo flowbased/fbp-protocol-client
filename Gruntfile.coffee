@@ -13,12 +13,20 @@ module.exports = ->
     # CoffeeScript compilation
     coffee:
       lib:
+        options:
+          bare: true
+          transpile:
+            presets: ['es2015']
         expand: true
         cwd: 'src/lib'
         src: ['**.coffee']
         dest: 'lib'
         ext: '.js'
       helpers:
+        options:
+          bare: true
+          transpile:
+            presets: ['es2015']
         expand: true
         cwd: 'src/helpers'
         src: ['**.coffee']
