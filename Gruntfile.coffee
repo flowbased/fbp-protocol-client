@@ -3,13 +3,6 @@ module.exports = ->
   @initConfig
     pkg: @file.readJSON 'package.json'
 
-    # Updating the package manifest files
-    noflo_manifest:
-      update:
-        files:
-          'component.json': ['graphs/*', 'components/*']
-          'package.json': ['graphs/*', 'components/*']
-
     # CoffeeScript compilation
     coffee:
       lib:
@@ -120,7 +113,6 @@ module.exports = ->
             level: 'warn'
 
   # Grunt plugins used for building
-  @loadNpmTasks 'grunt-noflo-manifest'
   @loadNpmTasks 'grunt-noflo-browser'
   @loadNpmTasks 'grunt-contrib-coffee'
   @loadNpmTasks 'grunt-contrib-uglify'
