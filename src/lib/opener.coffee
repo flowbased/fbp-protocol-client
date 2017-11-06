@@ -2,10 +2,10 @@ Base = require './base'
 
 class OpenerRuntime extends Base
   constructor: (definition) ->
+    super definition
     @connecting = false
     @connected = false
     @buffer = []
-    super definition
 
   getElement: -> null
 

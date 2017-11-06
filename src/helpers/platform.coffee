@@ -10,6 +10,7 @@ if not isBrowser()
   # Note: no data is passed with open and close events
   class NodeWebSocketClient extends EventEmitter
     constructor: (address, protocol) ->
+      super()
       WebSocketClient = require('websocket').client
       @client = new WebSocketClient # the real client
       @connection = null

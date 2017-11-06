@@ -3,12 +3,12 @@ platform = require '../helpers/platform'
 
 class WebSocketRuntime extends Base
   constructor: (definition) ->
+    super definition
     @connecting = false
     @connection = null
     @protocol = 'noflo'
     @buffer = []
     @container = null
-    super definition
 
   getElement: ->
     return @container if @container

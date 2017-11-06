@@ -27,6 +27,7 @@ normalizePorts = (ports) ->
 # and that data send on a specific index is only sent to that connection
 class PseudoComponent extends EventEmitter
   constructor: () ->
+    super()
     @_receiveFunc = null
     @ports =
       inPorts: {}
@@ -51,6 +52,7 @@ class PseudoComponent extends EventEmitter
 
 class PseudoRuntime extends EventEmitter
   constructor: (httpServer) ->
+    super()
     @connections = []
     @wsServer = new WebSocketServer { httpServer: httpServer }
     @wsServer.on 'request', (request) =>
