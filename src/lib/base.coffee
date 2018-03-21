@@ -52,7 +52,7 @@ class BaseRuntime extends platform.EventEmitter
       when 'graph' then @recvGraph message.command, message.payload
       when 'network' then @recvNetwork message.command, message.payload
       when 'component' then @recvComponent message.command, message.payload
-
+      when 'trace' then @recvTrace message.command, message.payload
 
   recvRuntime: (command, payload) ->
     if command is 'runtime'
@@ -99,6 +99,11 @@ class BaseRuntime extends platform.EventEmitter
         @emit 'network',
           command: command
           payload: payload
+
+  recvTrace: (command, payload) ->
+    @emit 'trace',
+      command: command
+      payload: payload
 
   sendRuntime: (command, payload = {}) ->
     payload.secret = @definition.secret
