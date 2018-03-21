@@ -46,6 +46,14 @@ class BaseRuntime extends platform.EventEmitter
   # Get a DOM element rendered by the runtime for preview purposes
   getElement: ->
 
+  recvMessage: (message) ->
+    switch message.protocol
+      when 'runtime' then @recvRuntime message.command, message.payload
+      when 'graph' then @recvGraph message.command, message.payload
+      when 'network' then @recvNetwork message.command, message.payload
+      when 'component' then @recvComponent message.command, message.payload
+
+
   recvRuntime: (command, payload) ->
     if command is 'runtime'
       for key, val of payload

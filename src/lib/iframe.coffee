@@ -134,11 +134,7 @@ class IframeRuntime extends Base
       data = JSON.parse message.data
     else
       data = message.data
-    switch data.protocol
-      when 'runtime' then @recvRuntime data.command, data.payload
-      when 'graph' then @recvGraph data.command, data.payload
-      when 'network' then @recvNetwork data.command, data.payload
-      when 'component' then @recvComponent data.command, data.payload
+    @recvMessage data
 
   flush: ->
     for item in @buffer
