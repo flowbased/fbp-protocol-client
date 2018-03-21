@@ -47,6 +47,7 @@ class BaseRuntime extends platform.EventEmitter
   getElement: ->
 
   recvMessage: (message) ->
+    @emit 'message', message
     switch message.protocol
       when 'runtime' then @recvRuntime message.command, message.payload
       when 'graph' then @recvGraph message.command, message.payload
