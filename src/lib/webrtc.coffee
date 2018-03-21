@@ -100,11 +100,7 @@ class WebRTCRuntime extends Base
 
   handleMessage: (message) =>
     msg = JSON.parse message
-    switch msg.protocol
-      when 'runtime' then @recvRuntime msg.command, msg.payload
-      when 'graph' then @recvGraph msg.command, msg.payload
-      when 'network' then @recvNetwork msg.command, msg.payload
-      when 'component' then @recvComponent msg.command, msg.payload
+    @recvMessage msg
 
   flush: ->
     for item in @buffer

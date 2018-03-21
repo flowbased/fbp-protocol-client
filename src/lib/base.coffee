@@ -46,6 +46,15 @@ class BaseRuntime extends platform.EventEmitter
   # Get a DOM element rendered by the runtime for preview purposes
   getElement: ->
 
+  recvMessage: (message) ->
+    @emit 'message', message
+    switch message.protocol
+      when 'runtime' then @recvRuntime message.command, message.payload
+      when 'graph' then @recvGraph message.command, message.payload
+      when 'network' then @recvNetwork message.command, message.payload
+      when 'component' then @recvComponent message.command, message.payload
+      when 'trace' then @recvTrace message.command, message.payload
+
   recvRuntime: (command, payload) ->
     if command is 'runtime'
       for key, val of payload
@@ -92,6 +101,11 @@ class BaseRuntime extends platform.EventEmitter
           command: command
           payload: payload
 
+  recvTrace: (command, payload) ->
+    @emit 'trace',
+      command: command
+      payload: payload
+
   sendRuntime: (command, payload = {}) ->
     payload.secret = @definition.secret
     @send 'runtime', command, payload
@@ -104,6 +118,9 @@ class BaseRuntime extends platform.EventEmitter
   sendComponent: (command, payload = {}) ->
     payload.secret = @definition.secret
     @send 'component', command, payload
+  sendTrace: (command, payload = {}) ->
+    payload.secret = @definition.secret
+    @send 'trace', command, payload
 
   send: (protocol, command, payload) ->
 
