@@ -118,6 +118,9 @@ class BaseRuntime extends platform.EventEmitter
   sendComponent: (command, payload = {}) ->
     payload.secret = @definition.secret
     @send 'component', command, payload
+  sendTrace: (command, payload = {}) ->
+    payload.secret = @definition.secret
+    @send 'trace', command, payload
 
   send: (protocol, command, payload) ->
 
