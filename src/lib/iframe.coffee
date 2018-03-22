@@ -130,6 +130,9 @@ class IframeRuntime extends Base
     ), w.location.href
 
   onMessage: (message) =>
+    if message.source and message.source isnt @iframe.contentWindow
+      # Message from unrelated source
+      return
     if typeof message.data is 'string'
       data = JSON.parse message.data
     else
