@@ -6,6 +6,8 @@ for JavaScript (node.js + browser).
 Changes
 -------
 
+* 0.2.4 (March 22 2018)
+  - Made `iframe` and `opener` transports filter out messages coming from elsewhere than the runtime. Fixes compatibility with es6-shim
 * 0.2.3 (March 21 2018)
   - Added `sendTrace` method for sending trace subprotocol messages
   - Added `trace` event for incoming trace subprotocol messages
