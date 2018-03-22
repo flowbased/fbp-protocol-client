@@ -30,7 +30,7 @@
     "mocha": "^5.0.0",
     "noflo": "~1.1.0",
     "noflo-core": ">= 0.4.0",
-    "noflo-runtime-websocket": "^0.9.0"
+    "noflo-runtime-websocket": "^0.10.0"
   },
   "keywords": [],
   "scripts": {
