@@ -21,10 +21,11 @@ class IframeRuntime extends Base
     # Update contents on property changes
     graph.on 'changeProperties', @updateIframe
 
+    super graph
+
     # Ensure iframe gets updated
     do @updateIframe
-
-    super graph
+    return
 
   setParentElement: (parent) ->
     @iframe = document.createElement 'iframe'
