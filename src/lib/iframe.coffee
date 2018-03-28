@@ -18,6 +18,8 @@ class IframeRuntime extends Base
       # Unsubscribe from previous main graph
       @graph.removeListener 'changeProperties', @updateIframe
 
+    return super graph unless graph
+
     # Update contents on property changes
     graph.on 'changeProperties', @updateIframe
 
