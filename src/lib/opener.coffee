@@ -11,16 +11,6 @@ class OpenerRuntime extends Base
 
   isConnected: -> @connected
 
-  setMain: (graph) ->
-    if @graph
-      # Unsubscribe from previous main graph
-      @graph.removeListener 'changeProperties', @updateIframe
-
-    # Update contents on property changes
-    graph.on 'changeProperties', @updateIframe
-
-    super graph
-
   setParentElement: (parent) ->
     return
 

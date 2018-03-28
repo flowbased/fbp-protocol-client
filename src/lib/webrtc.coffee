@@ -11,20 +11,7 @@ class WebRTCRuntime extends Base
     @buffer = []
 
   getElement: ->
-    # FIXME: not implemented
     return null
-
-    # DOM visualization for remote runtime output
-    console = document.createElement 'pre'
-
-    @on 'network', (message) ->
-      return unless message.command is 'output'
-      message.payload.message = '' unless message.payload.message
-      encoded = message.payload.message.replace /[\u00A0-\u99999<>\&]/gim, (i) -> "&##{i.charCodeAt(0)};"
-      console.innerHTML += "#{encoded}\n"
-      console.scrollTop = console.scrollHeight
-    @on 'disconnected', ->
-      console.innerHTML = ''
 
   isConnected: ->
     return @connection != null
