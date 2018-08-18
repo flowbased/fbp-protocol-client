@@ -85,10 +85,7 @@ class WebSocketRuntime extends Base
       return
 
     return unless @connection
-    @connection.send JSON.stringify
-      protocol: protocol
-      command: command
-      payload: payload
+    @connection.send JSON.stringify @_prepareMessage protocol, command, payload
 
   handleError: (error) =>
     if @protocol is 'noflo'

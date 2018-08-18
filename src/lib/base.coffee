@@ -1,4 +1,5 @@
 platform = require '../helpers/platform'
+uuid = require 'uuid'
 
 class BaseRuntime extends platform.EventEmitter
   constructor: (definition) ->
@@ -123,5 +124,14 @@ class BaseRuntime extends platform.EventEmitter
     @send 'trace', command, payload
 
   send: (protocol, command, payload) ->
+
+  _prepareMessage: (protocol, command, payload) ->
+    msg =
+      protocol: protocol
+      command: command
+      payload: payload
+      secret: @definition.secret
+      requestId: uuid()
+    return msg
 
 module.exports = BaseRuntime
