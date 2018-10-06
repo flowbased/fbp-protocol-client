@@ -66,11 +66,8 @@ class OpenerRuntime extends Base
 
   postMessage: (protocol, command, payload) ->
     return unless window.opener
-    window.opener.postMessage JSON.stringify(
-      protocol: protocol
-      command: command
-      payload: payload
-    ), '*'
+    msg = @_prepareMessage protocol, command, payload
+    window.opener.postMessage JSON.stringify(msg), '*'
 
   onMessage: (message) =>
     if message.source and message.source isnt @iframe.contentWindow

@@ -114,23 +114,18 @@ class IframeRuntime extends Base
   postMessage: (protocol, command, payload) ->
     w = @iframe.contentWindow
     return unless w
+
+    msg = @_prepareMessage protocol, command, payload
+
     try
       return if w.location.href is 'about:blank'
       if w.location.href.indexOf('chrome-extension://') isnt -1
         throw new Error 'Use * for IFRAME communications in a Chrome app'
     catch e
       # Chrome Apps
-      w.postMessage JSON.stringify(
-        protocol: protocol
-        command: command
-        payload: payload
-      ), '*'
+      w.postMessage JSON.stringify(msg), '*'
       return
-    w.postMessage JSON.stringify(
-      protocol: protocol
-      command: command
-      payload: payload
-    ), w.location.href
+    w.postMessage JSON.stringify(msg), w.location.href
 
   onMessage: (message) =>
     if message.source and message.source isnt @iframe.contentWindow

@@ -69,10 +69,7 @@ class WebRTCRuntime extends Base
     @emit 'disconnected'
 
   send: (protocol, command, payload) ->
-    m =
-      protocol: protocol
-      command: command
-      payload: payload
+    m = @_prepareMessage protocol, command, payload
     if @connecting
       @buffer.push m
       return
