@@ -12,7 +12,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "debug": "^3.1.0",
+    "debug": "^4.1.1",
     "websocket": "~1.0.22"
   },
   "devDependencies": {
