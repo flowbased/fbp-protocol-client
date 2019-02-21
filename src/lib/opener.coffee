@@ -73,7 +73,7 @@ class OpenerRuntime extends Base
     ), '*'
 
   onMessage: (message) =>
-    if message.source and message.source isnt @iframe.contentWindow
+    if message.source and message.source isnt window.opener
       # Message from unrelated source
       return
     if typeof message.data is 'string'
