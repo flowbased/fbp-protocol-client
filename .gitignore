@@ -6,3 +6,4 @@
 /lib/*.js
 /helpers/*.js
 *~
+package-lock.json
