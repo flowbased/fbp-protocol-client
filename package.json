@@ -20,7 +20,7 @@
     "coffee-loader": "^0.9.0",
     "coffeescript": "^2.0.2",
     "fbp-loader": "^0.1.1",
-    "grunt": "^1.0.1",
+    "grunt": "^1.0.4",
     "grunt-coffeelint": "^0.0.16",
     "grunt-contrib-coffee": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
