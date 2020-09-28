@@ -10,7 +10,7 @@ module.exports = (config) => {
     ],
     files: [
       'dist/*.js',
-      'spec/*.js',
+      'spec/webrtc.js',
     ],
     browsers: ['ChromeHeadless'],
     logLevel: config.LOG_WARN,
