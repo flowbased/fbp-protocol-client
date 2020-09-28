@@ -21,7 +21,7 @@ module.exports = ->
                 use: [
                   loader: 'babel-loader'
                   options:
-                    presets: ['es2015']
+                    presets: ['@babel/preset-env']
                 ]
               ,
                 test: /\.coffee$/
@@ -29,7 +29,7 @@ module.exports = ->
                   loader: 'coffee-loader'
                   options:
                     transpile:
-                      presets: ['es2015']
+                      presets: ['@babel/preset-env']
                 ]
               ,
                 test: /\.fbp$/
