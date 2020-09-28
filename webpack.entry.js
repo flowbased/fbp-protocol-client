@@ -1,6 +1,7 @@
 const exported = {
   // eslint-disable-next-line import/no-extraneous-dependencies
   noflo: require('noflo'),
+  events: require('events'),
   'fbp-protocol-client': require('./index'),
 };
 
