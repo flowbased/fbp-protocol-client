@@ -1,8 +1,10 @@
 /node_modules/
 /browser/
+/dist/
 /components/*/
 /spec/*.xml
 /lib/*.js
 /helpers/*.js
 package-lock.json
+fbp.json
 *~
