@@ -1,7 +1,8 @@
-var exported = {
+const exported = {
   'fbp-protocol-client': require('./index'),
-  'events': require('events'),
-  'noflo': require('noflo')
+  events: require('events'),
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  noflo: require('noflo'),
 };
 
 if (window) {
@@ -9,8 +10,6 @@ if (window) {
     if (exported[moduleName]) {
       return exported[moduleName];
     }
-    throw new Error('Module ' + moduleName + ' not available');
+    throw new Error(`Module ${moduleName} not available`);
   };
 }
-
-

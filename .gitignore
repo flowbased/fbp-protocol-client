@@ -1,8 +1,8 @@
 /node_modules/
 /browser/
 /components/*/
-/spec/*.js
 /spec/*.xml
 /lib/*.js
 /helpers/*.js
+package-lock.json
 *~

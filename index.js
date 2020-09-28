@@ -1,13 +1,12 @@
-var debug = require('debug')('fbp-protocol-client');
 exports.transports = {
-  'websocket': require('./lib/websocket'),
-  'iframe': require('./lib/iframe'),
-  'opener': require('./lib/opener'),
-  'webrtc': require('./lib/webrtc'),
-  'base': require('./lib/base')
+  websocket: require('./src/lib/websocket'),
+  iframe: require('./src/lib/iframe'),
+  opener: require('./src/lib/opener'),
+  webrtc: require('./src/lib/webrtc'),
+  base: require('./src/lib/base'),
 };
-exports.connection = require('./helpers/connection');
+exports.connection = require('./src/helpers/connection');
 
-exports.getTransport = function (transport) {
+exports.getTransport = function getTransport(transport) {
   return exports.transports[transport];
 };
