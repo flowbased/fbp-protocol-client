@@ -59,7 +59,7 @@ class WebRTCRuntime extends Base {
       this.signaller.announce(id);
     });
     this.signaller.on('signal', (data) => {
-      if (!this.peer) {
+      if (!this.peer && !this.peer.destroyed) {
         return;
       }
       this.peer.signal(data);
