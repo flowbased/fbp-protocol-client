@@ -37,6 +37,9 @@ class FakeRuntime extends EventEmitter {
       signaller.announce(this.id);
     });
     signaller.on('signal', (data) => {
+      if (!this.peer) {
+        return;
+      }
       this.peer.signal(data);
     });
     this.peer.on('signal', (data) => {
