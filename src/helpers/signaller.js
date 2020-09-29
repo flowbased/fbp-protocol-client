@@ -39,8 +39,10 @@ class Signaller extends EventEmitter {
       switch (command) {
         case '/announce': {
           debug(this.id, 'recv', command);
-          this.hasPeers = true;
-          this.flushAnnouncements();
+          setTimeout(() => {
+            this.hasPeers = true;
+            this.flushAnnouncements();
+          }, 0);
           if (payload.signal) {
             this.emit('signal', payload.signal, peer);
           } else {
@@ -51,7 +53,10 @@ class Signaller extends EventEmitter {
         case '/roominfo': {
           // Ignore for now
           if (payload.memberCount > this.memberCount) {
-            this.flushAnnouncements();
+            setTimeout(() => {
+              this.hasPeers = true;
+              this.flushAnnouncements();
+            }, 0);
           }
           this.memberCount = payload.memberCount;
           break;
