@@ -70,9 +70,11 @@ class WebRTCRuntime extends Base {
     });
     this.signaller.on('error', this.handleError);
     this.peer.on('signal', (data) => {
+      debug(`${this.id} transmitting signalling data`);
       this.signaller.announce(id, data);
     });
     this.peer.on('connect', () => {
+      debug(`${this.id} connected to peer`);
       this.connecting = false;
       this.connection = true;
       this.emit('status', {
@@ -85,6 +87,7 @@ class WebRTCRuntime extends Base {
     });
     this.peer.on('data', this.handleMessage);
     this.peer.on('close', () => {
+      debug(`${this.id} disconnected from peer`);
       this.connection = null;
       this.signaller.disconnect();
       this.signaller = null;
@@ -122,12 +125,11 @@ class WebRTCRuntime extends Base {
     }
 
     if (!this.connection) { return; }
-    debug('send', m);
     this.peer.send(JSON.stringify(m));
   }
 
   handleError(error) {
-    debug('error', error);
+    debug(`${this.id} errored`, error);
     this.connection = null;
     this.connecting = false;
     this.emit('error', error);

@@ -76,6 +76,7 @@ class Signaller extends EventEmitter {
       this.connection = null;
       this.connecting = false;
       this.emit('error', err);
+      debug(`${this.id} error`, err);
     });
   }
 
