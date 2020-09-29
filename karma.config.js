@@ -9,6 +9,7 @@ module.exports = (config) => {
       'mocha',
     ],
     files: [
+      'node_modules/rtc-quickconnect/dist/quickconnect.js',
       'dist/*.js',
       'spec/webrtc.js',
     ],

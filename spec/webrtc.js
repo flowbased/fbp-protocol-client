@@ -37,13 +37,12 @@ class FakeRuntime extends EventEmitter {
       channels: {
         chat: true,
       },
-      signaller: this.signaller,
       capture: false,
       constraints: false,
       expectedLocalStreams: 0,
     };
     // eslint-disable-next-line
-    const peer = RTC(options);
+    const peer = quickconnect(this.signaller, options);
     peer.on('channel:opened:chat', (id, dc) => {
       console.log('fakeruntime opened');
       this.channel = dc;

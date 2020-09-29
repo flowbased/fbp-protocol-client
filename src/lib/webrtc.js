@@ -39,14 +39,13 @@ class WebRTCRuntime extends Base {
       channels: {
         chat: true,
       },
-      signaller,
       capture: false,
       constraints: false,
       expectedLocalStreams: 0,
     };
 
     // eslint-disable-next-line
-    this.peer = RTC(options);
+    this.peer = quickconnect(signaller, options);
     this.peer.on('channel:opened:chat', (chatId, dc) => {
       this.connection = dc;
       this.connection.onmessage = (data) => {

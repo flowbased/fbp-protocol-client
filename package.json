@@ -33,6 +33,7 @@
     "noflo-component-loader": "^0.3.5",
     "noflo-core": ">= 0.4.0",
     "noflo-runtime-websocket": "^0.11.0",
+    "rtc-quickconnect": "^7.5.0",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12"
   },
