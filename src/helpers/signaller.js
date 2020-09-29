@@ -9,8 +9,9 @@ class Signaller extends EventEmitter {
     this.connection = null;
     this.connecting = false;
     this.buffer = [];
-    this.signals = [];
+    this.announcements = [];
     this.room = null;
+    this.hasPeers = false;
     this.memberCount = 0;
   }
 
@@ -28,7 +29,6 @@ class Signaller extends EventEmitter {
       this.flush();
     });
     connection.addEventListener('message', (msg) => {
-      debug('receive', msg.data);
       const [command, peer, data] = msg.data.split('|');
       let payload = null;
       if (data) {
@@ -38,18 +38,25 @@ class Signaller extends EventEmitter {
       }
       switch (command) {
         case '/announce': {
-          if (!payload.signal) {
-            return;
+          debug(this.id, 'recv', command);
+          setTimeout(() => {
+            this.hasPeers = true;
+            this.flushAnnouncements();
+          }, 0);
+          if (payload.signal) {
+            this.emit('signal', payload.signal, peer);
+          } else {
+            this.emit('join');
           }
-          this.emit('signal', payload.signal, peer);
           break;
         }
         case '/roominfo': {
+          // Ignore for now
           if (payload.memberCount > this.memberCount) {
-            // New members have joined, send connection details
-            this.signals.forEach((signal) => {
-              this.announce(this.room, signal, false);
-            });
+            setTimeout(() => {
+              this.hasPeers = true;
+              this.flushAnnouncements();
+            }, 0);
           }
           this.memberCount = payload.memberCount;
           break;
@@ -72,7 +79,7 @@ class Signaller extends EventEmitter {
     });
   }
 
-  announce(room, signal = null, keep = true) {
+  announce(room, signal = null) {
     const identifier = {
       id: this.id,
     };
@@ -81,33 +88,52 @@ class Signaller extends EventEmitter {
       room,
       id: this.id,
     };
-    if (keep) {
-      this.signals.push(signal);
+    if (signal && !this.hasPeers) {
+      debug('push announcement');
+      this.announcements.push(announcement.signal);
       this.room = room;
+      return;
     }
     this.send(`/announce|${JSON.stringify(identifier)}|${JSON.stringify(announcement)}`);
   }
 
   send(data) {
     if (!this.connection) {
+      debug('push buffer');
       this.buffer.push(data);
       return;
     }
-    debug('send', data);
+    const [command] = data.split('|');
+    debug(this.id, 'send', command);
     this.connection.send(data);
   }
 
   disconnect() {
-    this.signals = [];
     if (!this.connection) { return; }
     this.connection.close();
   }
 
   flush() {
+    if (!this.buffer.length) {
+      return;
+    }
+    debug('flush buffer', this.buffer.length);
     this.buffer.forEach((msg) => {
       this.send(msg);
     });
     this.buffer = [];
+  }
+
+  flushAnnouncements() {
+    if (!this.announcements.length) {
+      return;
+    }
+    debug('flush announcements', this.announcements.length);
+    this.hasPeers = true;
+    this.announcements.forEach((announcement) => {
+      this.announce(this.room, announcement);
+    });
+    this.announcements = [];
   }
 }
 
