@@ -1,7 +1,9 @@
 # fbp-protocol-client
 
 Implementation of [FBP runtime protocol](https://flowbased.github.io/fbp-protocol/)
-for JavaScript (node.js + browser).
+connection handling for JavaScript (node.js + browser).
+
+For higher-level FBP protocol client, please take a look at [fbp-client](https://github.com/flowbased/fbp-client).
 
 Changes
 -------
