@@ -29,7 +29,6 @@ class Signaller extends EventEmitter {
       this.flush();
     });
     connection.addEventListener('message', (msg) => {
-      debug(this.id, msg.data);
       const [command, peer, data] = msg.data.split('|');
       let payload = null;
       if (data) {
