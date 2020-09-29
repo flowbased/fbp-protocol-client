@@ -89,6 +89,7 @@ class Signaller extends EventEmitter {
       id: this.id,
     };
     if (signal && !this.hasPeers) {
+      debug('push announcement');
       this.announcements.push(announcement.signal);
       this.room = room;
       return;
@@ -98,6 +99,7 @@ class Signaller extends EventEmitter {
 
   send(data) {
     if (!this.connection) {
+      debug('push buffer');
       this.buffer.push(data);
       return;
     }
@@ -112,6 +114,10 @@ class Signaller extends EventEmitter {
   }
 
   flush() {
+    if (!this.buffer.length) {
+      return;
+    }
+    debug('flush buffer', this.buffer.length);
     this.buffer.forEach((msg) => {
       this.send(msg);
     });
@@ -122,6 +128,7 @@ class Signaller extends EventEmitter {
     if (!this.announcements.length) {
       return;
     }
+    debug('flush announcements', this.announcements.length);
     this.hasPeers = true;
     this.announcements.forEach((announcement) => {
       this.announce(this.room, announcement);
