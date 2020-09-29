@@ -2,6 +2,7 @@ const exported = {
   // eslint-disable-next-line import/no-extraneous-dependencies
   noflo: require('noflo'),
   events: require('events'),
+  'simple-peer': require('simple-peer'),
   'fbp-protocol-client': require('./index'),
 };
 
