@@ -48,7 +48,7 @@ class Signaller extends EventEmitter {
           if (payload.memberCount > this.memberCount) {
             // New members have joined, send connection details
             this.signals.forEach((signal) => {
-              this.announce(this.room, signal);
+              this.announce(this.room, signal, false);
             });
           }
           this.memberCount = payload.memberCount;
@@ -72,7 +72,7 @@ class Signaller extends EventEmitter {
     });
   }
 
-  announce(room, signal = null) {
+  announce(room, signal = null, keep = true) {
     const identifier = {
       id: this.id,
     };
@@ -81,8 +81,10 @@ class Signaller extends EventEmitter {
       room,
       id: this.id,
     };
-    this.signals.push(signal);
-    this.room = room;
+    if (keep) {
+      this.signals.push(signal);
+      this.room = room;
+    }
     this.send(`/announce|${JSON.stringify(identifier)}|${JSON.stringify(announcement)}`);
   }
 
