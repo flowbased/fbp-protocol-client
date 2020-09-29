@@ -22,7 +22,7 @@ class Signaller extends EventEmitter {
     const connection = new WebSocket(this.signaller);
     this.connecting = true;
     connection.addEventListener('open', () => {
-      debug(`connected to ${this.signaller}`);
+      debug(`${this.id} connected to ${this.signaller}`);
       this.connection = connection;
       this.connecting = false;
       this.emit('connected');
@@ -62,7 +62,7 @@ class Signaller extends EventEmitter {
           break;
         }
         default: {
-          debug(`unhandled command ${command}`, payload);
+          debug(`${this.id} unhandled command ${command}`, payload);
         }
       }
     });
@@ -70,7 +70,7 @@ class Signaller extends EventEmitter {
       this.connection = null;
       this.connecting = false;
       this.emit('disconnected');
-      debug('disconnected');
+      debug(`${this.id} disconnected`);
     });
     connection.addEventListener('error', (err) => {
       this.connection = null;
@@ -89,7 +89,7 @@ class Signaller extends EventEmitter {
       id: this.id,
     };
     if (signal && !this.hasPeers) {
-      debug('push announcement');
+      debug(`${this.id} push announcement`);
       this.announcements.push(announcement.signal);
       this.room = room;
       return;
@@ -99,7 +99,7 @@ class Signaller extends EventEmitter {
 
   send(data) {
     if (!this.connection) {
-      debug('push buffer');
+      debug(`${this.id} push buffer`);
       this.buffer.push(data);
       return;
     }
@@ -117,7 +117,7 @@ class Signaller extends EventEmitter {
     if (!this.buffer.length) {
       return;
     }
-    debug('flush buffer', this.buffer.length);
+    debug(this.id, 'flush buffer', this.buffer.length);
     this.buffer.forEach((msg) => {
       this.send(msg);
     });
@@ -128,7 +128,7 @@ class Signaller extends EventEmitter {
     if (!this.announcements.length) {
       return;
     }
-    debug('flush announcements', this.announcements.length);
+    debug(this.id, 'flush announcements', this.announcements.length);
     this.hasPeers = true;
     this.announcements.forEach((announcement) => {
       this.announce(this.room, announcement);
