@@ -21,7 +21,7 @@ jobs:
         npm test
       env:
         CI: true
-        DEBUG: 'fbp-protocol-client:*'
+        DEBUG: 'fbp-protocol-client:signaller'
   merge-me:
     name: Auto-merge dependency updates
     needs: test
