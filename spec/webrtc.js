@@ -31,31 +31,31 @@ class FakeRuntime extends EventEmitter {
       // eslint-disable-next-line
       options.wrtc = require('wrtc');
     }
-    this.peer = new Peer(options);
     signaller.connect();
     signaller.once('connected', () => {
       signaller.announce(this.id);
+      this.peer = new Peer(options);
+      this.peer.on('signal', (data) => {
+        signaller.announce(this.id, data);
+      });
+      this.peer.on('data', (data) => {
+        const msg = JSON.parse(data);
+        this.emit('message', msg);
+        if ((msg.protocol === 'runtime') && (msg.command === 'getruntime')) {
+          // reply so we are considered to be connected
+          this.send('runtime', 'runtime', {
+            type: 'noflo-browser',
+            version: '0.7',
+            capabilities: ['protocol:graph'],
+          });
+        }
+      });
     });
     signaller.on('signal', (data) => {
       if (!this.peer && !this.peer.destroyed) {
         return;
       }
       this.peer.signal(data);
-    });
-    this.peer.on('signal', (data) => {
-      signaller.announce(this.id, data);
-    });
-    this.peer.on('data', (data) => {
-      const msg = JSON.parse(data);
-      this.emit('message', msg);
-      if ((msg.protocol === 'runtime') && (msg.command === 'getruntime')) {
-        // reply so we are considered to be connected
-        this.send('runtime', 'runtime', {
-          type: 'noflo-browser',
-          version: '0.7',
-          capabilities: ['protocol:graph'],
-        });
-      }
     });
   }
 

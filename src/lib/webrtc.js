@@ -32,20 +32,20 @@ class WebRTCRuntime extends Base {
   }
 
   connect() {
-    let id; let signaller;
+    let roomId; let signaller;
     if (this.isConnected() || this.connecting) { return; }
 
     const address = this.getAddress();
     if (address.indexOf('#') !== -1) {
-      [signaller, id] = address.split('#');
+      [signaller, roomId] = address.split('#');
     } else {
       signaller = 'ws://api.flowhub.io/';
-      id = address;
+      roomId = address;
     }
     this.signaller = new Signaller(signaller, this.id);
 
     const options = {
-      channelName: id,
+      channelName: roomId,
       initiator: true,
     };
     if (!isBrowser()) {
@@ -53,10 +53,11 @@ class WebRTCRuntime extends Base {
       options.wrtc = require('wrtc');
     }
 
-    this.peer = new Peer(options);
     this.signaller.connect();
     this.signaller.once('connected', () => {
-      this.signaller.announce(id);
+      this.signaller.announce(roomId);
+      this.peer = new Peer(options);
+      this.subscribePeer(roomId);
     });
     this.signaller.on('signal', (data) => {
       if (!this.peer && !this.peer.destroyed) {
@@ -69,9 +70,13 @@ class WebRTCRuntime extends Base {
       }
     });
     this.signaller.on('error', this.handleError);
+    this.connecting = true;
+  }
+
+  subscribePeer(roomId) {
     this.peer.on('signal', (data) => {
       debug(`${this.id} transmitting signalling data`);
-      this.signaller.announce(id, data);
+      this.signaller.announce(roomId, data);
     });
     this.peer.on('connect', () => {
       debug(`${this.id} connected to peer`);
@@ -98,8 +103,6 @@ class WebRTCRuntime extends Base {
       this.emit('disconnected');
     });
     this.peer.on('error', this.handleError);
-
-    this.connecting = true;
   }
 
   disconnect() {
