@@ -9,8 +9,9 @@ class Signaller extends EventEmitter {
     this.connection = null;
     this.connecting = false;
     this.buffer = [];
-    this.signals = [];
+    this.announcements = [];
     this.room = null;
+    this.hasPeers = false;
     this.memberCount = 0;
   }
 
@@ -28,7 +29,7 @@ class Signaller extends EventEmitter {
       this.flush();
     });
     connection.addEventListener('message', (msg) => {
-      debug('receive', msg.data);
+      debug(this.id, msg.data);
       const [command, peer, data] = msg.data.split('|');
       let payload = null;
       if (data) {
@@ -38,18 +39,20 @@ class Signaller extends EventEmitter {
       }
       switch (command) {
         case '/announce': {
-          if (!payload.signal) {
-            return;
+          debug(this.id, 'recv', command);
+          this.hasPeers = true;
+          this.flushAnnouncements();
+          if (payload.signal) {
+            this.emit('signal', payload.signal, peer);
+          } else {
+            this.emit('join');
           }
-          this.emit('signal', payload.signal, peer);
           break;
         }
         case '/roominfo': {
+          // Ignore for now
           if (payload.memberCount > this.memberCount) {
-            // New members have joined, send connection details
-            this.signals.forEach((signal) => {
-              this.announce(this.room, signal, false);
-            });
+            this.flushAnnouncements();
           }
           this.memberCount = payload.memberCount;
           break;
@@ -72,7 +75,7 @@ class Signaller extends EventEmitter {
     });
   }
 
-  announce(room, signal = null, keep = true) {
+  announce(room, signal = null) {
     const identifier = {
       id: this.id,
     };
@@ -81,9 +84,10 @@ class Signaller extends EventEmitter {
       room,
       id: this.id,
     };
-    if (keep) {
-      this.signals.push(signal);
+    if (signal && !this.hasPeers) {
+      this.announcements.push(announcement.signal);
       this.room = room;
+      return;
     }
     this.send(`/announce|${JSON.stringify(identifier)}|${JSON.stringify(announcement)}`);
   }
@@ -93,12 +97,12 @@ class Signaller extends EventEmitter {
       this.buffer.push(data);
       return;
     }
-    debug('send', data);
+    const [command] = data.split('|');
+    debug(this.id, 'send', command);
     this.connection.send(data);
   }
 
   disconnect() {
-    this.signals = [];
     if (!this.connection) { return; }
     this.connection.close();
   }
@@ -108,6 +112,17 @@ class Signaller extends EventEmitter {
       this.send(msg);
     });
     this.buffer = [];
+  }
+
+  flushAnnouncements() {
+    if (!this.announcements.length) {
+      return;
+    }
+    this.hasPeers = true;
+    this.announcements.forEach((announcement) => {
+      this.announce(this.room, announcement);
+    });
+    this.announcements = [];
   }
 }
 
