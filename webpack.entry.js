@@ -3,6 +3,7 @@ const exported = {
   noflo: require('noflo'),
   events: require('events'),
   'simple-peer': require('simple-peer'),
+  'uuid': require('uuid'),
   'fbp-protocol-client': require('./index'),
 };
 

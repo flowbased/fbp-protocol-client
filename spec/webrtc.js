@@ -1,5 +1,6 @@
 const noflo = require('noflo');
 const Peer = require('simple-peer');
+const { v4: uuid } = require('uuid');
 
 const {
   EventEmitter,
@@ -20,7 +21,7 @@ class FakeRuntime extends EventEmitter {
       this.id = address;
     }
 
-    const signaller = new Signaller(this.signaller, 'ffdc0acc-34b3-4943-bc04-97c076447ed1');
+    const signaller = new Signaller(this.signaller, uuid());
 
     this.channel = null;
     const options = {
@@ -69,7 +70,7 @@ class FakeRuntime extends EventEmitter {
 describe('WebRTC', () => {
   describe('transport', () => {
     let runtime = null;
-    const id = '2ef763ff-1f28-49b8-b58f-5c9a5c23af2f';
+    const id = uuid();
     const def = {
       label: 'NoFlo over WebRTC',
       description: 'Open any client-side NoFlo app in Flowhub',
