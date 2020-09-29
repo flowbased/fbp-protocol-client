@@ -9,6 +9,9 @@ class Signaller extends EventEmitter {
     this.connection = null;
     this.connecting = false;
     this.buffer = [];
+    this.signals = [];
+    this.room = null;
+    this.memberCount = 0;
   }
 
   connect() {
@@ -30,6 +33,8 @@ class Signaller extends EventEmitter {
       let payload = null;
       if (data) {
         payload = JSON.parse(data);
+      } else {
+        payload = JSON.parse(peer);
       }
       switch (command) {
         case '/announce': {
@@ -37,6 +42,16 @@ class Signaller extends EventEmitter {
             return;
           }
           this.emit('signal', payload.signal, peer);
+          break;
+        }
+        case '/roominfo': {
+          if (payload.memberCount > this.memberCount) {
+            // New members have joined, send connection details
+            this.signals.forEach((signal) => {
+              this.announce(this.room, signal);
+            });
+          }
+          this.memberCount = payload.memberCount;
           break;
         }
         default: {
@@ -66,6 +81,8 @@ class Signaller extends EventEmitter {
       room,
       id: this.id,
     };
+    this.signals.push(signal);
+    this.room = room;
     this.send(`/announce|${JSON.stringify(identifier)}|${JSON.stringify(announcement)}`);
   }
 
@@ -79,6 +96,7 @@ class Signaller extends EventEmitter {
   }
 
   disconnect() {
+    this.signals = [];
     if (!this.connection) { return; }
     this.connection.close();
   }
