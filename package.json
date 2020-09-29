@@ -12,30 +12,45 @@
   },
   "license": "MIT",
   "dependencies": {
-    "debug": "^3.1.0",
+    "debug": "^3.2.6",
+    "simple-peer": "^9.7.2",
+    "uuid": "^8.3.0",
     "websocket": "~1.0.22"
   },
+  "optionalDependencies": {
+    "wrtc": "^0.4.6"
+  },
   "devDependencies": {
-    "chai": "^4.1.1",
-    "coffee-loader": "^0.9.0",
-    "coffeescript": "^2.0.2",
+    "chai": "^4.2.0",
+    "eslint": "^7.10.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-chai": "0.0.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-mocha": "^8.0.0",
     "fbp-loader": "^0.1.1",
-    "grunt": "^1.0.1",
-    "grunt-coffeelint": "^0.0.16",
-    "grunt-contrib-coffee": "^2.0.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-mocha-phantomjs": "^4.0.0",
-    "grunt-mocha-test": "^0.13.2",
-    "grunt-noflo-browser": "^1.5.1",
-    "mocha": "^5.0.0",
-    "noflo": "~1.1.0",
+    "karma": "^5.2.3",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-mocha": "^2.0.1",
+    "karma-mocha-reporter": "^2.2.5",
+    "mocha": "^5.2.0",
+    "noflo": "~1.2.0",
+    "noflo-component-loader": "^0.3.5",
     "noflo-core": ">= 0.4.0",
-    "noflo-runtime-websocket": "^0.10.0"
+    "noflo-runtime-websocket": "^0.11.0",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
+    "webrtc-adapter": "^7.7.0"
   },
   "keywords": [
     "fbp"
   ],
   "scripts": {
-    "test": "grunt test"
+    "lint": "eslint src/**/*.js spec/*.js *.js",
+    "build": "noflo-cache-preheat && webpack --config ./webpack.config.js",
+    "pretest": "npm run lint && npm run build",
+    "test:node": "mocha --exit --require spec/utils/inject.js spec/*.js",
+    "test:browser": "karma start ./karma.config.js",
+    "test": "npm run test:node && npm run test:browser"
   }
 }

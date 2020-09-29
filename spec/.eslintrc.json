@@ -1,0 +1,24 @@
+{
+  "extends": "airbnb-base",
+  "plugins": [
+    "chai",
+    "mocha"
+  ],
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "rules": {
+    "global-require": 0,
+    "prefer-destructuring": 0,
+    "no-underscore-dangle": 0,
+    "func-names": 0
+  },
+  "globals": {
+    "baseDir": false,
+    "chai": false,
+    "noflo": false,
+    "client": false,
+    "window": false
+  }
+}
