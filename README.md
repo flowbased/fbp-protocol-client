@@ -6,6 +6,10 @@ for JavaScript (node.js + browser).
 Changes
 -------
 
+* 0.3.0 (September 29 2020)
+  - WebRTC transport is now also supported on Node.js
+  - Fixed an issue with `opener` transport message filtering
+  - Ported from CoffeeScript to modern ES6
 * 0.2.5 (March 28 2018)
   - Fixed `iframe` transport updating iframe contents after main graph is set
   - Added support for setting main graph to `NULL`
