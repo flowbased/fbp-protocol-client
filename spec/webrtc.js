@@ -105,6 +105,7 @@ describe('WebRTC', () => {
       runtime.once('connected', () => {
         const connected = runtime.isConnected();
         chai.expect(connected).to.equal(true);
+        runtime.removeListener('error', done);
         done();
       });
       runtime.once('error', done);
