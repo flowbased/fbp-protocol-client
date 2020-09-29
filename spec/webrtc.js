@@ -16,7 +16,7 @@ class FakeRuntime extends EventEmitter {
       this.signaller = address.split('#')[0];
       this.id = address.split('#')[1];
     } else {
-      this.signaller = 'https://api.flowhub.io/';
+      this.signaller = 'ws://api.flowhub.io/';
       this.id = address;
     }
 
@@ -101,7 +101,7 @@ describe('WebRTC', () => {
       chai.expect(runtime.isConnected()).to.equal(false);
     });
     it('should emit "connected" on connect()', function (done) {
-      this.timeout(10000);
+      this.timeout(5000);
       runtime.once('connected', () => {
         const connected = runtime.isConnected();
         chai.expect(connected).to.equal(true);
@@ -127,7 +127,6 @@ describe('WebRTC', () => {
         this.skip();
         return;
       }
-      this.timeout(10000);
       runtime.once('disconnected', () => {
         chai.expect(runtime.isConnected()).to.equal(false);
         done();

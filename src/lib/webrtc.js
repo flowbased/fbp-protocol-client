@@ -39,7 +39,7 @@ class WebRTCRuntime extends Base {
     if (address.indexOf('#') !== -1) {
       [signaller, id] = address.split('#');
     } else {
-      signaller = 'https://api.flowhub.io/';
+      signaller = 'ws://api.flowhub.io/';
       id = address;
     }
     this.signaller = new Signaller(signaller, this.id);

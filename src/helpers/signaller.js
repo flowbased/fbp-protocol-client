@@ -18,12 +18,14 @@ class Signaller extends EventEmitter {
     const connection = new WebSocket(this.signaller);
     this.connecting = true;
     connection.addEventListener('open', () => {
+      debug(`connected to ${this.signaller}`);
       this.connection = connection;
       this.connecting = false;
       this.emit('connected');
       this.flush();
     });
     connection.addEventListener('message', (msg) => {
+      debug('receive', msg.data);
       const [command, peer, data] = msg.data.split('|');
       let payload = null;
       if (data) {
@@ -34,12 +36,11 @@ class Signaller extends EventEmitter {
           if (!payload.signal) {
             return;
           }
-          debug(payload.signal);
           this.emit('signal', payload.signal, peer);
           break;
         }
         default: {
-          debug(command, payload.signal);
+          debug(`unhandled command ${command}`, payload);
         }
       }
     });
@@ -47,6 +48,7 @@ class Signaller extends EventEmitter {
       this.connection = null;
       this.connecting = false;
       this.emit('disconnected');
+      debug('disconnected');
     });
     connection.addEventListener('error', (err) => {
       this.connection = null;
@@ -72,6 +74,7 @@ class Signaller extends EventEmitter {
       this.buffer.push(data);
       return;
     }
+    debug('send', data);
     this.connection.send(data);
   }
 
