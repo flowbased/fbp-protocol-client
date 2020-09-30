@@ -108,11 +108,15 @@ class WebRTCRuntime extends Base {
   disconnect() {
     if (!this.connection) { return; }
     this.connecting = false;
-    this.peer.destroy();
-    this.peer = null;
+    if (this.peer) {
+      this.peer.destroy();
+      this.peer = null;
+    }
     this.connection = null;
-    this.signaller.disconnect();
-    this.signaller = null;
+    if (this.signaller) {
+      this.signaller.disconnect();
+      this.signaller = null;
+    }
     this.emit('disconnected');
   }
 
