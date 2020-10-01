@@ -1,5 +1,3 @@
-const debug = require('debug')('fbp-protocol-client:platform');
-
 const {
   EventEmitter,
 } = require('events');
