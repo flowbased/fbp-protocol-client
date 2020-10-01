@@ -8,7 +8,7 @@ const {
 
 const Base = client.getTransport('base');
 const WebRtcRuntime = client.getTransport('webrtc');
-const Signaller = client.signaller;
+const { Signaller } = client;
 
 class FakeRuntime extends EventEmitter {
   constructor(address) {
@@ -17,13 +17,13 @@ class FakeRuntime extends EventEmitter {
       this.signaller = address.split('#')[0];
       this.id = address.split('#')[1];
     } else {
-      this.signaller = 'ws://api.flowhub.io/';
+      this.signaller = 'wss://api.flowhub.io/';
       this.id = address;
     }
 
-    const signaller = new Signaller(this.signaller, uuid());
+    const signaller = new Signaller(uuid(), this.signaller);
 
-    this.channel = null;
+    this.peers = {};
     const options = {
       channelName: this.id,
     };
@@ -33,12 +33,14 @@ class FakeRuntime extends EventEmitter {
     }
     signaller.connect();
     signaller.once('connected', () => {
-      signaller.announce(this.id);
-      this.peer = new Peer(options);
-      this.peer.on('signal', (data) => {
-        signaller.announce(this.id, data);
+      signaller.join(this.id);
+    });
+    signaller.on('join', (member) => {
+      const peer = new Peer(options);
+      peer.on('signal', (data) => {
+        signaller.signal(member.id, data);
       });
-      this.peer.on('data', (data) => {
+      peer.on('data', (data) => {
         const msg = JSON.parse(data);
         this.emit('message', msg);
         if ((msg.protocol === 'runtime') && (msg.command === 'getruntime')) {
@@ -50,12 +52,21 @@ class FakeRuntime extends EventEmitter {
           });
         }
       });
+      peer.on('close', () => {
+        delete this.peers[member.id];
+      });
+      this.peers[member.id] = peer;
     });
-    signaller.on('signal', (data) => {
-      if (!this.peer && !this.peer.destroyed) {
+    signaller.on('signal', (data, member) => {
+      if (!this.peers[member.id]) {
+        // We don't know about this peer, ignore
         return;
       }
-      this.peer.signal(data);
+      if (this.peers[member.id].destroyed) {
+        // Disconnected
+        return;
+      }
+      this.peers[member.id].signal(data);
     });
   }
 
@@ -66,7 +77,9 @@ class FakeRuntime extends EventEmitter {
       payload,
     };
     const m = JSON.stringify(msg);
-    this.peer.send(m);
+    Object.keys(this.peers).forEach((peerId) => {
+      this.peers[peerId].send(m);
+    });
   }
 }
 
