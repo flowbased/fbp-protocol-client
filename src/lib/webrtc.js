@@ -24,7 +24,7 @@ class WebRTCRuntime extends Base {
 
   isConnected() {
     // TODO: Only consider runtime peers
-    const connectedPeers = Object.keys(this.peers).filter((p) => this.peers[p].connected());
+    const connectedPeers = Object.keys(this.peers).filter((p) => this.peers[p].connected);
     if (connectedPeers.length) {
       return true;
     }
@@ -132,7 +132,7 @@ class WebRTCRuntime extends Base {
 
     Object.keys(this.peers).forEach((p) => {
       const peer = this.peers[p];
-      if (!peer.connected()) {
+      if (!peer.connected) {
         return;
       }
       peer.send(JSON.stringify(m));
