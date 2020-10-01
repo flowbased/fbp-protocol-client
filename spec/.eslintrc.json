@@ -18,6 +18,7 @@
     "baseDir": false,
     "chai": false,
     "noflo": false,
+    "uuid": false,
     "client": false,
     "window": false
   }

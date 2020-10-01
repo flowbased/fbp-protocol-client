@@ -1,8 +1,3 @@
-const noflo = require('noflo');
-const { v4: uuid } = require('uuid');
-
-const { Signaller } = client;
-
 describe('Signaller', () => {
   const connectSignaller = (signaller, callback) => {
     if (signaller.isConnected()) {
@@ -49,7 +44,7 @@ describe('Signaller', () => {
         if (variant.instantiate) {
           return variant.instantiate();
         }
-        return new Signaller(uuid());
+        return new client.Signaller(uuid());
       };
       const signaller1 = getSignaller();
       const signaller2 = getSignaller();

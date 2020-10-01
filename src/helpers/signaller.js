@@ -2,9 +2,10 @@ const debug = require('debug')('fbp-protocol-client:signaller');
 const { WebSocket, EventEmitter } = require('./platform');
 
 class Signaller extends EventEmitter {
-  constructor(id, signaller = 'wss://api.flowhub.io') {
+  constructor(id, role = 'client', signaller = 'wss://api.flowhub.io') {
     super();
     this.signaller = signaller;
+    this.role = role;
     this.id = id;
     this.connection = null;
     this.connecting = false;
@@ -22,11 +23,11 @@ class Signaller extends EventEmitter {
     if (this.isConnected() || this.connecting) {
       return;
     }
-    debug(`${this.id} connecting`);
+    debug(`${this.id} ${this.role} connecting`);
     const connection = new WebSocket(this.signaller);
     this.connecting = true;
     connection.addEventListener('open', () => {
-      debug(`${this.id} connected to ${this.signaller}`);
+      debug(`${this.id} ${this.role} connected to ${this.signaller}`);
       this.connection = connection;
       this.connecting = false;
       this.emit('connected');
@@ -39,13 +40,13 @@ class Signaller extends EventEmitter {
       this.connection = null;
       this.connecting = false;
       this.emit('disconnected');
-      debug(`${this.id} disconnected`);
+      debug(`${this.id} ${this.role} disconnected`);
     });
     connection.addEventListener('error', (err) => {
       this.connection = null;
       this.connecting = false;
       this.emit('error', err);
-      debug(`${this.id} error`, err);
+      debug(`${this.id} ${this.role} error`, err);
     });
   }
 
@@ -67,20 +68,31 @@ class Signaller extends EventEmitter {
     this.send(`/announce|${JSON.stringify(identifier)}|${JSON.stringify(announcement)}`);
   }
 
+  joinReply(to, room) {
+    const identifier = {
+      id: this.id,
+    };
+    const announcement = {
+      room,
+      id: this.id,
+    };
+    this.send(`/to|${to}|/announce|${JSON.stringify(identifier)}|${JSON.stringify(announcement)}`);
+  }
+
   send(data) {
     if (!this.isConnected()) {
-      debug(`${this.id} push buffer`);
+      debug(`${this.id} ${this.role} push buffer`);
       this.buffer.push(data);
       return;
     }
     const [command] = data.split('|');
-    debug(this.id, 'send', command);
+    debug(`${this.id} ${this.role} send ${command}`);
     this.connection.send(data);
   }
 
   disconnect() {
     if (!this.isConnected()) { return; }
-    debug(`${this.id} disconnecting`);
+    debug(`${this.id} ${this.role} disconnecting`);
     this.connection.close();
   }
 
@@ -89,7 +101,7 @@ class Signaller extends EventEmitter {
     if (command === '/to') {
       // Direct Message, process the payload
       if (peer !== this.id) {
-        debug(`${this.id} wrongly-addressed DM, was sent to ${peer}`);
+        debug(`${this.id} ${this.role} wrongly-addressed DM, was sent to ${peer}`);
         return;
       }
       const dm = `${data}|${rest.join('|')}`;
@@ -99,7 +111,7 @@ class Signaller extends EventEmitter {
       });
       return;
     }
-    debug(this.id, 'recv', command);
+    debug(`${this.id} ${this.role} recv ${command}`);
     let payload = null;
     if (data) {
       payload = JSON.parse(data);
@@ -119,7 +131,7 @@ class Signaller extends EventEmitter {
         break;
       }
       default: {
-        debug(`${this.id} unhandled command ${command}`, payload);
+        debug(`${this.id} ${this.role} unhandled command ${command}`, payload);
       }
     }
   }
@@ -128,7 +140,7 @@ class Signaller extends EventEmitter {
     if (!this.buffer.length) {
       return;
     }
-    debug(this.id, 'flush buffer', this.buffer.length);
+    debug(`${this.id} ${this.role} flush buffer`, this.buffer.length);
     this.buffer.forEach((msg) => {
       this.send(msg);
     });

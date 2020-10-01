@@ -42,7 +42,7 @@ class WebRTCRuntime extends Base {
       signaller = 'wss://api.flowhub.io/';
       roomId = address;
     }
-    this.signaller = new Signaller(this.id, signaller);
+    this.signaller = new Signaller(this.id, 'client', signaller);
 
     const options = {
       channelName: roomId,
@@ -59,26 +59,47 @@ class WebRTCRuntime extends Base {
       this.signaller.join(roomId);
     });
     this.signaller.on('join', (member) => {
+      if (this.peers[member.id]) {
+        return;
+      }
       // Another peer has joined. Likely the runtime
+      this.signaller.joinReply(member.id, this.id);
       this.connectPeer(member, options);
     });
     this.signaller.on('signal', (data, member) => {
       // Getting signalling information for a peer
       const peer = this.peers[member.id];
       if (!peer && !peer.destroyed) {
+        debug(`${this.id} received signalling data for unknown/destroyed peer ${member.id}`);
         return;
       }
+      debug(`${this.id} received signalling data for peer ${member.id}`);
       peer.signal(data);
     });
     this.signaller.on('error', this.handleError);
+    this.signaller.on('disconnected', () => {
+      this.signaller = null;
+      this.connecting = false;
+      if (this.isConnected()) {
+        // We may retain peer connections even without signaller
+        return;
+      }
+      this.emit('status', {
+        online: false,
+        label: 'disconnected',
+      });
+      this.emit('disconnected');
+    });
     this.connecting = true;
   }
 
   connectPeer(member, options) {
+    debug(`${this.id} connecting to peer ${member.id}`);
     const peer = new Peer(options);
     this.peers[member.id] = peer;
     peer.on('signal', (data) => {
       // Send connection details to peer via signalling server
+      debug(`${this.id} sending signalling data to peer ${member.id}`);
       this.signaller.signal(member.id, data);
     });
     peer.on('connect', () => {
@@ -96,11 +117,13 @@ class WebRTCRuntime extends Base {
     peer.on('close', () => {
       debug(`${this.id} disconnected from peer ${member.id}`);
       delete this.peers[member.id];
-      this.emit('status', {
-        online: false,
-        label: 'disconnected',
-      });
-      this.emit('disconnected');
+      if (!this.isConnected()) {
+        this.emit('status', {
+          online: false,
+          label: 'disconnected',
+        });
+        this.emit('disconnected');
+      }
       this.connecting = false;
     });
     peer.on('error', this.handleError);
@@ -108,15 +131,14 @@ class WebRTCRuntime extends Base {
 
   disconnect() {
     this.connecting = false;
-    if (this.peer) {
-      this.peer.destroy();
-      this.peer = null;
-    }
+    Object.keys(this.peers).forEach((p) => {
+      this.peers[p].destroy();
+      delete this.peers[p];
+    });
     if (this.signaller) {
       this.signaller.disconnect();
       this.signaller = null;
     }
-    this.emit('disconnected');
   }
 
   send(protocol, command, payload) {

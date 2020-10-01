@@ -1,6 +1,4 @@
-const noflo = require('noflo');
 const Peer = require('simple-peer');
-const { v4: uuid } = require('uuid');
 
 const {
   EventEmitter,
@@ -8,7 +6,6 @@ const {
 
 const Base = client.getTransport('base');
 const WebRtcRuntime = client.getTransport('webrtc');
-const { Signaller } = client;
 
 class FakeRuntime extends EventEmitter {
   constructor(address) {
@@ -21,7 +18,7 @@ class FakeRuntime extends EventEmitter {
       this.id = address;
     }
 
-    const signaller = new Signaller(uuid(), this.signaller);
+    const signaller = new client.Signaller(uuid(), 'runtime', this.signaller);
 
     this.peers = {};
     const options = {
@@ -36,6 +33,10 @@ class FakeRuntime extends EventEmitter {
       signaller.join(this.id);
     });
     signaller.on('join', (member) => {
+      if (this.peers[member.id]) {
+        return;
+      }
+      signaller.joinReply(member.id, this.id);
       const peer = new Peer(options);
       peer.on('signal', (data) => {
         signaller.signal(member.id, data);
@@ -60,9 +61,11 @@ class FakeRuntime extends EventEmitter {
     signaller.on('signal', (data, member) => {
       if (!this.peers[member.id]) {
         // We don't know about this peer, ignore
+        console.log(`Unknown peer ${member.id}`);
         return;
       }
       if (this.peers[member.id].destroyed) {
+        console.log(`Destroyed peer ${member.id}`);
         // Disconnected
         return;
       }
