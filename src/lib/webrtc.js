@@ -11,13 +11,11 @@ class WebRTCRuntime extends Base {
     this.id = uuid();
     this.handleError = this.handleError.bind(this);
     this.handleMessage = this.handleMessage.bind(this);
-    this.peer = null;
     this.signaller = null;
     this.connecting = false;
-    this.connection = null;
     this.protocol = 'webrtc';
     this.buffer = [];
-    this.peers = [];
+    this.peers = {};
   }
 
   getElement() {
@@ -25,7 +23,9 @@ class WebRTCRuntime extends Base {
   }
 
   isConnected() {
-    if (this.peer && this.connection) {
+    // TODO: Only consider runtime peers
+    const connectedPeers = Object.keys(this.peers).filter((p) => this.peers[p].connected);
+    if (connectedPeers.length) {
       return true;
     }
     return false;
@@ -39,10 +39,10 @@ class WebRTCRuntime extends Base {
     if (address.indexOf('#') !== -1) {
       [signaller, roomId] = address.split('#');
     } else {
-      signaller = 'ws://api.flowhub.io/';
+      signaller = 'wss://api.flowhub.io/';
       roomId = address;
     }
-    this.signaller = new Signaller(signaller, this.id);
+    this.signaller = new Signaller(this.id, 'client', signaller);
 
     const options = {
       channelName: roomId,
@@ -55,33 +55,56 @@ class WebRTCRuntime extends Base {
 
     this.signaller.connect();
     this.signaller.once('connected', () => {
-      this.signaller.announce(roomId);
-      this.peer = new Peer(options);
-      this.subscribePeer(roomId);
+      // Join the Runtime ID room
+      this.signaller.join(roomId);
     });
-    this.signaller.on('signal', (data) => {
-      if (!this.peer && !this.peer.destroyed) {
+    this.signaller.on('join', (member) => {
+      if (this.peers[member.id]) {
         return;
       }
-      try {
-        this.peer.signal(data);
-      } catch (e) {
-        this.handleError(e);
+      // Another peer has joined. Likely the runtime
+      this.signaller.joinReply(member.id, this.id);
+      this.connectPeer(member, options);
+    });
+    this.signaller.on('signal', (data, member) => {
+      // Getting signalling information for a peer
+      const peer = this.peers[member.id];
+      if (!peer && !peer.destroyed) {
+        debug(`${this.id} received signalling data for unknown/destroyed peer ${member.id}`);
+        return;
       }
+      debug(`${this.id} received signalling data for peer ${member.id}`);
+      peer.signal(data);
     });
     this.signaller.on('error', this.handleError);
+    this.signaller.on('disconnected', () => {
+      this.signaller = null;
+      this.connecting = false;
+      if (this.isConnected()) {
+        // We may retain peer connections even without signaller
+        return;
+      }
+      this.emit('status', {
+        online: false,
+        label: 'disconnected',
+      });
+      this.emit('disconnected');
+    });
     this.connecting = true;
   }
 
-  subscribePeer(roomId) {
-    this.peer.on('signal', (data) => {
-      debug(`${this.id} transmitting signalling data`);
-      this.signaller.announce(roomId, data);
+  connectPeer(member, options) {
+    debug(`${this.id} connecting to peer ${member.id}`);
+    const peer = new Peer(options);
+    this.peers[member.id] = peer;
+    peer.on('signal', (data) => {
+      // Send connection details to peer via signalling server
+      debug(`${this.id} sending signalling data to peer ${member.id}`);
+      this.signaller.signal(member.id, data);
     });
-    this.peer.on('connect', () => {
-      debug(`${this.id} connected to peer`);
+    peer.on('connect', () => {
+      debug(`${this.id} connected to peer ${member.id}`);
       this.connecting = false;
-      this.connection = true;
       this.emit('status', {
         online: true,
         label: 'connected',
@@ -90,34 +113,32 @@ class WebRTCRuntime extends Base {
       this.sendRuntime('getruntime', {});
       this.flush();
     });
-    this.peer.on('data', this.handleMessage);
-    this.peer.on('close', () => {
-      debug(`${this.id} disconnected from peer`);
-      this.connection = null;
-      this.signaller.disconnect();
-      this.signaller = null;
-      this.emit('status', {
-        online: false,
-        label: 'disconnected',
-      });
-      this.emit('disconnected');
+    peer.on('data', this.handleMessage);
+    peer.on('close', () => {
+      debug(`${this.id} disconnected from peer ${member.id}`);
+      delete this.peers[member.id];
+      if (!this.isConnected()) {
+        this.emit('status', {
+          online: false,
+          label: 'disconnected',
+        });
+        this.emit('disconnected');
+      }
+      this.connecting = false;
     });
-    this.peer.on('error', this.handleError);
+    peer.on('error', this.handleError);
   }
 
   disconnect() {
-    if (!this.connection) { return; }
     this.connecting = false;
-    if (this.peer) {
-      this.peer.destroy();
-      this.peer = null;
-    }
-    this.connection = null;
+    Object.keys(this.peers).forEach((p) => {
+      this.peers[p].destroy();
+      delete this.peers[p];
+    });
     if (this.signaller) {
       this.signaller.disconnect();
       this.signaller = null;
     }
-    this.emit('disconnected');
   }
 
   send(protocol, command, payload) {
@@ -126,13 +147,18 @@ class WebRTCRuntime extends Base {
       command,
       payload,
     };
-    if (this.connecting) {
+    if (!this.isConnected()) {
       this.buffer.push(m);
       return;
     }
 
-    if (!this.connection) { return; }
-    this.peer.send(JSON.stringify(m));
+    Object.keys(this.peers).forEach((p) => {
+      const peer = this.peers[p];
+      if (!peer.connected) {
+        return;
+      }
+      peer.send(JSON.stringify(m));
+    });
   }
 
   handleError(error) {

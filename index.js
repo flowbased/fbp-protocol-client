@@ -6,7 +6,7 @@ exports.transports = {
   base: require('./src/lib/base'),
 };
 exports.connection = require('./src/helpers/connection');
-exports.signaller = require('./src/helpers/signaller');
+exports.Signaller = require('./src/helpers/signaller');
 
 exports.getTransport = function getTransport(transport) {
   return exports.transports[transport];

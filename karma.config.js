@@ -11,7 +11,7 @@ module.exports = (config) => {
     files: [
       'dist/*.js',
       'spec/utils/inject.js',
-      'spec/webrtc.js',
+      'spec/*.js',
     ],
     browsers: ['ChromeHeadless'],
     logLevel: config.LOG_WARN,
