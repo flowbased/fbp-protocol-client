@@ -38,9 +38,14 @@ class WebRTCRuntime extends Base {
     const address = this.getAddress();
     if (address.indexOf('#') !== -1) {
       [signaller, roomId] = address.split('#');
+      if (signaller === 'webrtc://') {
+        signaller = null;
+      }
     } else {
-      signaller = 'wss://api.flowhub.io/';
       roomId = address;
+    }
+    if (!signaller) {
+      signaller = 'wss://api.flowhub.io/';
     }
     this.signaller = new Signaller(this.id, 'client', signaller);
 
