@@ -9,7 +9,6 @@ class WebRTCRuntime extends Base {
   constructor(definition) {
     super(definition);
     this.id = uuid();
-    this.handleError = this.handleError.bind(this);
     this.handleMessage = this.handleMessage.bind(this);
     this.signaller = null;
     this.connecting = false;
@@ -31,9 +30,25 @@ class WebRTCRuntime extends Base {
     return false;
   }
 
+  maybeDisconnected() {
+    if (this.signaller && !this.signaller.isConnected()) {
+      this.signaller = null;
+      this.connecting = false;
+    }
+    if (this.isConnected()) {
+      return;
+    }
+    this.emit('status', {
+      online: false,
+      label: 'disconnected',
+    });
+    this.emit('disconnected');
+  }
+
   connect() {
     let roomId; let signaller;
     if (this.isConnected() || this.connecting) { return; }
+    if (this.signaller && this.signaller.isConnected()) { return; }
 
     const address = this.getAddress();
     if (address.indexOf('#') !== -1) {
@@ -81,19 +96,18 @@ class WebRTCRuntime extends Base {
       debug(`${this.id} received signalling data for peer ${member.id}`);
       peer.signal(data);
     });
-    this.signaller.on('error', this.handleError);
+    this.signaller.on('error', (error) => {
+      debug(`${this.id} signaller errored`, error);
+      this.connecting = false;
+      this.signaller = null;
+      this.maybeDisconnected();
+      this.emit('error', error);
+    });
     this.signaller.on('disconnected', () => {
       this.signaller = null;
       this.connecting = false;
-      if (this.isConnected()) {
-        // We may retain peer connections even without signaller
-        return;
-      }
-      this.emit('status', {
-        online: false,
-        label: 'disconnected',
-      });
-      this.emit('disconnected');
+      // We may retain peer connections even without signaller
+      this.maybeDisconnected();
     });
     this.connecting = true;
   }
@@ -122,16 +136,14 @@ class WebRTCRuntime extends Base {
     peer.on('close', () => {
       debug(`${this.id} disconnected from peer ${member.id}`);
       delete this.peers[member.id];
-      if (!this.isConnected()) {
-        this.emit('status', {
-          online: false,
-          label: 'disconnected',
-        });
-        this.emit('disconnected');
-      }
-      this.connecting = false;
+      this.maybeDisconnected();
     });
-    peer.on('error', this.handleError);
+    peer.on('error', (error) => {
+      debug(`${this.id} peer ${member.id} errored`, error);
+      delete this.peers[member.id];
+      this.maybeDisconnected();
+      this.emit('error', error);
+    });
   }
 
   disconnect() {
@@ -164,13 +176,6 @@ class WebRTCRuntime extends Base {
       }
       peer.send(JSON.stringify(m));
     });
-  }
-
-  handleError(error) {
-    debug(`${this.id} errored`, error);
-    this.connection = null;
-    this.connecting = false;
-    this.emit('error', error);
   }
 
   handleMessage(message) {
