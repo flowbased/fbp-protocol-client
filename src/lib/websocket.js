@@ -110,18 +110,23 @@ class WebSocketRuntime extends Base {
     }));
   }
 
-  handleError(error) {
+  handleError(errorEvent) {
     if (this.protocol === 'noflo') {
+      // Try without the legacy protocol
       delete this.protocol;
       this.connecting = false;
       this.connection = null;
-      setTimeout(() => this.connect(),
-        1);
+      setTimeout(() => {
+        this.connect();
+      }, 1);
       return;
     }
-    this.emit('error', error);
     this.connection = null;
     this.connecting = false;
+    // Create an error object for the event
+    const error = new Error('Connection failed');
+    error.event = errorEvent;
+    this.emit('error', error);
   }
 
   handleMessage(message) {
