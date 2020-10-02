@@ -8,6 +8,8 @@ For higher-level FBP protocol client, please take a look at [fbp-client](https:/
 Changes
 -------
 
+* 0.3.3 (October 02 2020)
+  - Improved connection error handling for both WebSocket and WebRTC runtimes
 * 0.3.2 (October 01 2020)
   - Support for `webrtc://#<runtimeId>` address shorthand
 * 0.3.1 (October 01 2020)
