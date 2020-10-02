@@ -100,8 +100,8 @@ class WebRTCRuntime extends Base {
       debug(`${this.id} signaller errored`, error);
       this.connecting = false;
       this.signaller = null;
-      this.emit('error', error);
       this.maybeDisconnected();
+      this.emit('error', error);
     });
     this.signaller.on('disconnected', () => {
       this.signaller = null;
@@ -140,9 +140,9 @@ class WebRTCRuntime extends Base {
     });
     peer.on('error', (error) => {
       debug(`${this.id} peer ${member.id} errored`, error);
-      this.emit('error', error);
       delete this.peers[member.id];
       this.maybeDisconnected();
+      this.emit('error', error);
     });
   }
 
