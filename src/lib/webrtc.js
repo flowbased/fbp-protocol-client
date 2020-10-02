@@ -48,7 +48,7 @@ class WebRTCRuntime extends Base {
   connect() {
     let roomId; let signaller;
     if (this.isConnected() || this.connecting) { return; }
-    if (this.signaller && this.signaller.isConnected() { return; }
+    if (this.signaller && this.signaller.isConnected()) { return; }
 
     const address = this.getAddress();
     if (address.indexOf('#') !== -1) {
