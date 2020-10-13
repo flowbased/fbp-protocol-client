@@ -38,7 +38,7 @@
     "noflo-component-loader": "^0.3.5",
     "noflo-core": ">= 0.4.0",
     "noflo-runtime-websocket": "^0.11.0",
-    "webpack": "^4.44.2",
+    "webpack": "^5.0.0",
     "webpack-cli": "^4.0.0",
     "webrtc-adapter": "^7.7.0"
   },
